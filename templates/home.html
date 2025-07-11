@@ -1,0 +1,374 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+Home
+{% endblock %}
+
+{% block extra_head %}
+<!-- Swiper CSS -->
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+/>
+
+<style>
+  /* Custom Swiper nav buttons */
+  .custom-nav-btn {
+    color: var(--gold-light);
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 9999px;
+    padding: 14px;
+    width: 48px;
+    height: 48px;
+    top: 50%;
+    transform: translateY(-50%);
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  .custom-nav-btn:hover {
+    background-color: rgba(0, 0, 0, 0.7);
+    color: var(--cream);
+    transform: translateY(-50%) scale(1.1);
+  }
+
+  /* Enhanced Swiper pagination */
+  .swiper-pagination-bullet {
+    background: var(--gold-light);
+    opacity: 0.7;
+    width: 12px;
+    height: 12px;
+    margin: 0 6px;
+    transition: all 0.3s ease;
+  }
+
+  .swiper-pagination-bullet-active {
+    background: var(--gold-dark);
+    opacity: 1;
+    width: 14px;
+    height: 14px;
+  }
+
+  /* Gallery slide animations */
+  .swiper-slide {
+    transition: transform 0.5s ease, opacity 0.5s ease;
+    transform: scale(0.92);
+    opacity: 0.85;
+  }
+
+  .swiper-slide-active {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  /* Enhanced gallery slide styling */
+  .gallery-slide {
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+  }
+
+  .gallery-slide:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+  }
+
+  /* Image zoom effect */
+  .gallery-slide img {
+    transition: transform 0.6s ease;
+  }
+
+  .gallery-slide:hover img {
+    transform: scale(1.08);
+  }
+
+  /* Caption styling */
+  .gallery-caption {
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+    transition: opacity 0.3s ease;
+  }
+
+  .gallery-slide:hover .gallery-caption {
+    opacity: 1;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- Hero -->
+<section class="hero bg-cover bg-center h-[600] text-white flex items-center justify-center"
+         style="background-image: url('{% static 'images/about.jpg' %}');
+                background-color: rgba(26, 18, 11, 0.7);
+                background-blend-mode: overlay;">
+  <div class="relative">
+    <div class="bg-black bg-opacity-40 backdrop-blur-sm p-24 rounded-xl text-center transition-all duration-500 hover:bg-opacity-50 hover:backdrop-blur-md"
+         style="border-color: var(--gold-light);">
+      <h1 class="text-6xl font-bold mb-8 font-cinzel tracking-wide">
+        <span style="background: linear-gradient(to right, var(--gold-dark), var(--gold-dark)); -webkit-background-clip: text; background-clip: text; color: transparent;">
+          University Alumni Network
+        </span>
+      </h1>
+      <p class="text-2xl mb-10 font-serif italic" style="color: var(--gold-light);">
+        Reconnect. Reflect. Reignite.
+      </p>
+      <form method="GET" action="{% url 'global_search' %}" class="mb-8 flex justify-center items-center">
+        <div class="relative w-full max-w-xl">
+          <input type="text" name="q" placeholder="Search alumni, events, stories..."
+                 class="w-full px-6 py-4 pr-12 rounded-full border-2 border-transparent bg-white bg-opacity-90 text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-opacity-50 focus:border-transparent transition-all duration-300 hover:bg-opacity-100 shadow-lg hover:shadow-xl focus:shadow-xl"
+                 style="focus:ring-color: var(--gold-light);">
+          <button type="submit"
+                  class="absolute right-2 top-1/2 transform -translate-y-1/2 p-2 rounded-full transition-all duration-300 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-opacity-50"
+                  style="color: var(--gold-dark);">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </button>
+        </div>
+      </form>
+      <div class="relative group">
+        <a href="{% url 'view_testimonials' %}"
+           class="relative px-10 py-4 rounded-lg font-medium text-lg transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
+           style="background-color: var(--primary-dark); color: white; border-color: var(--gold-light); border-opacity: 0.3; border-width: 1px;">
+          Voices
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Upcoming Events -->
+<section id="events" class="py-16" style="background-color: var(--parchment);">
+  <div class="container mx-auto text-center px-12">
+    <h2 class="text-4xl font-bold mb-10 font-cinzel" style="color: var(--primary-dark);">Upcoming Events</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+      {% for event in events %}
+      <div class="bg-white rounded-xl overflow-hidden shadow-lg transition-transform duration-300 hover:shadow-xl hover:-translate-y-2"
+           style="border-top: 4px solid var(--gold-light);">
+        {% if event.image %}
+        <div class="h-56 overflow-hidden">
+          <img src="/media/{{ event.image }}" alt="{{ event.title }}" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
+        </div>
+        {% endif %}
+        <div class="p-6">
+          <div class="flex justify-between items-start mb-2">
+            <h3 class="text-xl font-semibold" style="color: var(--primary-dark);">{{ event.title }}</h3>
+            <span class="text-sm px-3 py-1 rounded-full" style="background-color: var(--gold-light); color: var(--primary-dark);">{{ event.event_type }}</span>
+          </div>
+          <div class="flex items-center text-sm mb-4" style="color: var(--secondary-dark);">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+            </svg>
+            {{ event.date }}
+          </div>
+          <a href="{% url 'register_for_event' %}?event_id={{ event.event_id }}"
+             class="inline-flex items-center font-medium transition-colors duration-200" style="color: var(--gold-dark);">
+            Learn more
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+      {% empty %}
+      <div class="col-span-full text-center py-12">
+        <p class="text-lg" style="color: var(--secondary-dark);">No upcoming events. Check back soon!</p>
+      </div>
+      {% endfor %}
+    </div>
+    <a href="{% url 'events_list' %}"
+       class="btn-royal mt-10 px-8 py-3 inline-block">
+      View All Events
+    </a>
+  </div>
+</section>
+
+<!-- Achievements -->
+<section class="py-20 bg-var(--cream)" id="achievements">
+  <div class="container mx-auto px-6">
+    <div class="text-center mb-16">
+      <h2 class="text-4xl font-cinzel font-bold mb-4" style="color: var(--primary-dark);">Alumni Achievements</h2>
+      <p class="max-w-2xl mx-auto text-lg" style="color: var(--secondary-dark);">Celebrating the extraordinary accomplishments of our alumni</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {% for ach in achievements %}
+      <div class="group relative overflow-hidden rounded-xl shadow-md hover:shadow-lg transition-all duration-300">
+        <div class="h-64 overflow-hidden">
+          {% if ach.picture %}
+          <img src="/media/{{ ach.picture }}" alt="{{ ach.title }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+          {% else %}
+          <img src="{% static 'images/profile.jpg' %}" alt="Default profile" class="w-full h-full object-cover">
+          {% endif %}
+        </div>
+        <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-80"></div>
+        <div class="absolute bottom-0 left-0 p-6 w-full">
+          <h3 class="text-xl font-semibold text-white mb-1">{{ ach.title }}</h3>
+          <p class="mb-3 font-medium" style="color: var(--gold-light);">{{ ach.full_name }}</p>
+          <a href="{% url 'achievement_details' ach.achievement_id %}" class="text-white text-sm font-medium inline-flex items-center hover:text-var(--gold-light) transition-colors duration-200">
+            Read story
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- Testimonials -->
+<section id="testimonials" class="py-16" style="background-color: var(--parchment);">
+    {% if testimonials %}
+    {% for t in testimonials %}
+    <div class="max-w-2xl mx-auto mb-10 text-center">
+      <p class="text-2xl italic mb-4 font-serif" style="color: var(--secondary-dark);">"{{ t.content }}"</p>
+      <p class="text-lg" style="color: var(--primary-dark);">
+        — {{ t.full_name }} ({{ t.role|title }})
+      </p>
+    </div>
+    {% endfor %}
+    {% endif %}
+</section>
+
+<!-- Gallery Preview Section -->
+<section id="gallery" class="py-20" style="background-color: var(--cream);">
+  <div class="container mx-auto text-center">
+    <h2 class="text-4xl font-bold mb-12 font-cinzel" style="color: var(--primary-dark);">Gallery Highlights</h2>
+
+    <!-- Swiper Container -->
+    <div class="relative px-8">
+      <div class="swiper myGallerySwiper">
+        <div class="swiper-wrapper">
+          {% for image in gallery_preview %}
+          <div class="swiper-slide gallery-slide">
+            <div class="relative h-72 overflow-hidden">
+              <img src="/media/{{ image.image_path }}" alt="{{ image.title }}" class="w-full h-full object-cover">
+              <div class="gallery-caption absolute bottom-0 left-0 right-0 p-4 opacity-0">
+                <p class="text-white text-sm font-medium">{{ image.caption|default:image.title }}</p>
+              </div>
+            </div>
+            <div class="p-6">
+              <h3 class="text-xl font-semibold text-left" style="color: var(--primary-dark);">{{ image.title }}</h3>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+
+        <!-- Pagination -->
+        <div class="swiper-pagination mt-8 !relative !bottom-0"></div>
+
+        <!-- Navigation buttons -->
+        <div class="swiper-button-prev custom-nav-btn"></div>
+        <div class="swiper-button-next custom-nav-btn"></div>
+      </div>
+    </div>
+
+    <a href="{% url 'gallery' %}" class="btn-royal mt-12 px-8 py-3 inline-block text-lg">
+      View Full Gallery
+    </a>
+  </div>
+</section>
+
+<!-- Contact Section -->
+<section id="contact" class="py-16" style="background: linear-gradient(135deg, var(--primary-dark), var(--secondary-dark));">
+    <div class="container mx-auto px-4">
+        <h2 class="text-4xl font-bold text-center mb-8 text-white font-cinzel">Contact Us</h2>
+        <div class="flex justify-center">
+            <div class="bg-white p-8 rounded-lg shadow w-full max-w-md" style="color: var(--primary-dark);">
+                <form method="post" action="contact/">
+                    {% csrf_token %}
+                    <div class="space-y-6">
+                        <div>
+                            <label class="block font-semibold mb-2">Name</label>
+                            <input type="text" name="name" placeholder="Your Name" class="w-full p-3 rounded-lg border" style="border-color: var(--gold-light);" required>
+                        </div>
+                        <div>
+                            <label class="block font-semibold mb-2">Email</label>
+                            <input type="email" name="email" placeholder="Your Email" class="w-full p-3 rounded-lg border" style="border-color: var(--gold-light);" required>
+                        </div>
+                        <div>
+                            <label class="block font-semibold mb-2">Message</label>
+                            <textarea name="message" placeholder="Your Message" class="w-full p-3 rounded-lg border" style="border-color: var(--gold-light); height: 150px;" required></textarea>
+                        </div>
+                        <button type="submit" class="btn-royal w-full py-3 px-4 text-lg">
+                          Send Message
+                        </button>
+                    </div>
+                </form>
+                {% if success %}
+                  <p class="text-green-500 mt-4 text-center">Your message has been submitted successfully.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+  /* Button styles */
+  .btn-royal {
+    background-color: var(--primary-dark);
+    color: white;
+    border: 1px solid var(--gold-light);
+    transition: all 0.3s ease;
+  }
+  .btn-royal:hover {
+    background-color: var(--secondary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Smooth transitions */
+  .transition {
+    transition-property: all;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 300ms;
+  }
+</style>
+
+{% endblock %}
+{% block extra_scripts %}
+
+<!-- Load Swiper JS -->
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+<!-- Initialize Swiper -->
+<script>
+  const swiper = new Swiper(".myGallerySwiper", {
+    slidesPerView: 1,
+    spaceBetween: 24,
+    loop: true,
+    autoplay: {
+      delay: 3000,
+      disableOnInteraction: false,
+      pauseOnMouseEnter: true,
+    },
+    pagination: {
+      el: ".swiper-pagination",
+      clickable: true,
+    },
+    navigation: {
+      nextEl: ".swiper-button-next",
+      prevEl: ".swiper-button-prev",
+    },
+    breakpoints: {
+      640: {
+        slidesPerView: 1,
+      },
+      768: {
+        slidesPerView: 2,
+      },
+      1024: {
+        slidesPerView: 3,
+      }
+    },
+    effect: "slide",
+    speed: 800,
+  });
+</script>
+
+{% endblock %}

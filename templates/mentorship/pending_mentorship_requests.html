@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="mt-10 mb-16 px-4">
+  <div class="max-w-4xl mx-auto bg-[var(--parchment)] border border-[var(--gold-light)] rounded-xl shadow-lg p-8">
+    <h2 class="text-3xl font-bold text-[var(--primary-dark)] mb-6">Mentorship Requests</h2>
+
+    {% for req in requests %}
+      <div class="bg-white rounded-lg border border-gray-300 shadow-sm p-6 mb-5">
+        <p class="text-gray-800 mb-1"><strong>Student:</strong> {{ req.student_name }} ({{ req.department }})</p>
+        <p class="text-gray-700 mb-2"><strong>Requested on:</strong> {{ req.start_date }}</p>
+        <a href="{% url 'public_profile_detail' req.student_id %}" class="text-blue-600 font-medium hover:underline">View Profile</a>
+
+        <form method="POST" action="{% url 'respond_mentorship_request' req.mentorship_id %}" class="mt-4 flex space-x-3">
+          {% csrf_token %}
+          <button name="action" value="accept"
+            class="px-5 py-2 rounded-lg font-semibold shadow-md transition duration-300 transform hover:-translate-y-1"
+            style="
+              background-color: var(--gold-light);
+              color: var(--primary-dark);
+              border: 1px solid var(--gold-dark);
+            "
+            onmouseover="this.style.backgroundColor='var(--gold-dark)'; this.style.color='white';"
+            onmouseout="this.style.backgroundColor='var(--gold-light)'; this.style.color='var(--primary-dark)';">
+            Accept
+          </button>
+
+          <button name="action" value="reject"
+            class="px-5 py-2 rounded-lg font-semibold shadow-md transition duration-300 transform hover:-translate-y-1"
+            style="
+              background-color: #f87171;
+              color: white;
+              border: 1px solid #e11d48;
+            "
+            onmouseover="this.style.backgroundColor='#e11d48';"
+            onmouseout="this.style.backgroundColor='#f87171';">
+            Reject
+          </button>
+        </form>
+      </div>
+    {% empty %}
+      <p class="text-gray-600 text-center mt-6">No pending mentorship requests.</p>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

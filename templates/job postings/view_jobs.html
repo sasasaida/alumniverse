@@ -1,0 +1,170 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<!-- Hero -->
+<section class="hero bg-cover bg-center h-[90vh] text-white flex items-center justify-center" 
+         style="background-image: url('{% static 'images/job.jpg' %}'); 
+                background-color: rgba(26, 18, 11, 0.7); 
+                background-blend-mode: overlay;">
+  <div class="relative">
+    
+      <h1 class="text-5xl font-bold mb-6 font-cinzel tracking-wide">
+        <span style="background: linear-gradient(to right, var(--gold-dark), var(--gold-dark)); -webkit-background-clip: text; background-clip: text; color: transparent;">
+          
+        </span>
+      </h1>
+      <p class="text-xl mb-8 font-serif italic" style="color: var(--gold-light);">
+        Build your future
+      </p>
+    </div>
+  </div>
+</section>
+<section class="py-12 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
+  <!-- Header with elegant styling -->
+  <div class="text-center mb-12">
+    <h1 class="text-4xl md:text-5xl font-cinzel font-bold mb-6 text-gray-900">Career Opportunities</h1>
+    <div class="w-24 h-1 mx-auto mb-6 bg-gradient-to-r from-amber-400 to-amber-600 animate-underline"></div>
+    <p class="text-lg text-gray-600 max-w-2xl mx-auto"> career paths for our talented Students</p>
+  </div>
+<!-- search bar -->
+<form method="get" class="mb-6 flex flex-wrap items-center gap-2">
+  <div class="relative w-full sm:w-1/2">
+    <input 
+      type="text" 
+      name="q" 
+      placeholder="Search by title or company..."
+      value="{{ search_query }}"
+      class="w-full border border-amber-400 bg-amber-50 p-3 rounded-lg 
+             text-amber-900 font-medium placeholder-amber-600
+             focus:outline-none focus:ring-1 focus:ring-amber-500
+             shadow-sm hover:shadow-amber-200/50 transition-all duration-200
+             backdrop-blur-sm bg-opacity-70" 
+    />
+    <div class="absolute inset-y-0 right-3 flex items-center pointer-events-none">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+      </svg>
+    </div>
+  </div>
+
+  <button 
+    type="submit" 
+    class="bg-gradient-to-br from-amber-500 to-amber-700 hover:from-amber-600 hover:to-amber-800 
+           text-amber-100 px-6 py-2.5 rounded-lg font-medium border border-amber-400
+           transform hover:scale-[1.02] transition-all duration-200
+           shadow hover:shadow-md shadow-amber-500/30"
+  >
+    Search
+  </button>
+
+  {% if search_query %}
+    <a 
+      href="{% url 'view_jobs' %}" 
+      class="bg-stone-100 hover:bg-stone-200 text-stone-700 px-6 py-2.5 rounded-lg
+             font-medium border border-stone-300 hover:border-stone-400
+             transform hover:scale-[1.02] transition-all duration-200
+             shadow-sm hover:shadow-md shadow-stone-400/30"
+    >
+      Reset
+    </a>
+  {% endif %}
+</form>
+
+  <!-- Jobs List -->
+  <div class="space-y-6">
+    {% for job in jobs %}
+    <div class="relative overflow-hidden rounded-xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 bg-white group">
+      <!-- Serial Number Badge -->
+      <div class="absolute -left-2 top-6 w-10 h-10 flex items-center justify-center rounded-full shadow-md" 
+           style="background-color: var(--gold-light); color: var(--primary-dark);">
+        <span class="font-bold">{{ forloop.counter }}</span>
+      </div>
+      
+      <div class="p-6 pl-12">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
+          <div>
+            <h2 class="text-xl font-semibold text-gray-900 mb-1">{{ job.title }}</h2>
+            <div class="flex items-center text-gray-600">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+              </svg>
+              <span>{{ job.company }}</span>
+            </div>
+          </div>
+          <div class="mt-2 md:mt-0">
+            <span class="text-sm font-medium text-gray-700">
+              {{ job.job_type|default:"Full-time" }}
+            </span>
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <p class="text-gray-700 mb-3">
+            <span class="font-medium" style="color: var(--gold-dark);">Description:</span> 
+            {{ job.description|truncatewords:20 }}
+          </p>
+          <p class="text-gray-600">
+            <span class="font-medium" style="color: var(--gold-dark);">Posted by:</span> 
+            {{ job.poster_name }}
+          </p>
+        </div>
+
+        <div class="flex space-x-3">
+          <a href="{% url 'job_details' job.job_id %}" 
+             class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white transition-colors duration-300"
+             style="background-color: var(--gold-dark); hover:bg-var(--gold-light);">
+            View Details
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+            </svg>
+          </a>
+          {% if job.can_edit %}
+          <a href="{% url 'edit_job' job.job_id %}" 
+             class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 transition-colors duration-300">
+            Edit
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+            </svg>
+          </a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    {% empty %}
+    <div class="text-center py-12">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+      </svg>
+      <h3 class="text-lg font-medium text-gray-900 mb-2">No current job openings</h3>
+      <p class="text-gray-500 max-w-md mx-auto">New opportunities will be posted here when available</p>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+<style>
+  /* Animations */
+  @keyframes underline {
+    0% { transform: scaleX(0); opacity: 0; }
+    100% { transform: scaleX(1); opacity: 1; }
+  }
+  
+  .animate-underline {
+    animation: underline 0.8s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+  }
+  
+  /* Hover effects */
+  .group:hover {
+    transform: translateY(-5px);
+  }
+  
+  /* Smooth transitions */
+  .transition-all {
+    transition-property: all;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 300ms;
+  }
+</style>
+
+{% endblock %}

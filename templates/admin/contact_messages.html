@@ -1,0 +1,152 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Contact Messages - AlumniVerse{% endblock %}
+
+{% block extra_head %}
+<style>
+  .contact-messages-container {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 0 1.5rem;
+  }
+
+  .messages-header {
+    background: linear-gradient(135deg, rgba(253, 251, 245, 0.98) 0%, rgba(250, 245, 230, 0.98) 100%);
+    border: 1px solid var(--gold-light);
+    box-shadow: 0 4px 20px rgba(156, 124, 56, 0.12);
+    border-radius: 0.75rem;
+    padding: 1.5rem 2rem;
+    margin-bottom: 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .messages-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, var(--gold-light), var(--gold-dark), var(--gold-light));
+  }
+
+  .messages-title {
+    font-family: 'Cinzel', serif;
+    font-weight: 700;
+    color: var(--primary-dark);
+    font-size: 1.75rem;
+    letter-spacing: 0.5px;
+  }
+
+  .message-list {
+    background: linear-gradient(135deg, rgba(253, 251, 245, 0.95) 0%, rgba(250, 245, 230, 0.95) 100%);
+    border: 1px solid var(--gold-light);
+    box-shadow: 0 4px 12px rgba(156, 124, 56, 0.08);
+    border-radius: 0.75rem;
+    overflow: hidden;
+  }
+
+  .message-item {
+    padding: 1.5rem;
+    border-bottom: 1px solid rgba(156, 124, 56, 0.1);
+  }
+
+  .message-item:last-child {
+    border-bottom: none;
+  }
+
+  .message-header {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px dashed rgba(156, 124, 56, 0.2);
+  }
+
+  .message-sender {
+    font-weight: 600;
+    color: var(--primary-dark);
+  }
+
+  .message-email {
+    color: var(--gold-dark);
+    font-size: 0.9rem;
+  }
+
+  .message-content {
+    color: var(--text-secondary);
+    line-height: 1.6;
+    padding: 1rem 0;
+    font-style: italic;
+  }
+
+  .message-meta {
+    display: flex;
+    align-items: center;
+    color: var(--gold-dark);
+    font-size: 0.85rem;
+  }
+
+  .message-meta svg {
+    margin-right: 0.5rem;
+  }
+
+  .empty-state {
+    padding: 3rem 2rem;
+    text-align: center;
+    background: linear-gradient(135deg, rgba(253, 251, 245, 0.95) 0%, rgba(250, 245, 230, 0.95) 100%);
+    border-radius: 0.75rem;
+  }
+
+  .empty-icon {
+    width: 3rem;
+    height: 3rem;
+    margin: 0 auto 1rem;
+    color: var(--gold-light);
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="contact-messages-container">
+  <div class="messages-header">
+    <h1 class="messages-title">Contact Messages</h1>
+  </div>
+
+  {% if messages_ %}
+    <div class="message-list">
+      {% for msg in messages_ %}
+        <div class="message-item">
+          <div class="message-header">
+            <div>
+              <span class="message-sender">{{ msg.name }}</span>
+              <span class="message-email">{{ msg.email }}</span>
+            </div>
+            <div class="message-meta">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              {{ msg.submitted_at|date:"F j, Y g:i A" }}
+            </div>
+          </div>
+          <div class="message-content">
+            {{ msg.message }}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="message-list empty-state">
+      <svg class="empty-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+      </svg>
+      <h3 class="text-lg font-medium text-gray-900">No Contact Messages</h3>
+      <p class="mt-2 text-gray-600">There are currently no messages in the contact inbox.</p>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

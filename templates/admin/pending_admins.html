@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="mt-10 mb-10">
+<h2 class="text-2xl font-bold mb-6">Pending Admin Approvals</h2>
+<table class="table-auto w-full">
+  <thead>
+    <tr class="bg-gray-100">
+      <th class="px-4 py-2">Username</th>
+      <th class="px-4 py-2">Email</th>
+      <th class="px-4 py-2">Approve</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for admin in admins %}
+    <tr class="border">
+      <td class="px-4 py-2">{{ admin.username }}</td>
+      <td class="px-4 py-2">{{ admin.email }}</td>
+      <td class="px-4 py-2">
+        <a href="{% url 'approve_admin' admin.id %}" class="text-blue-600 hover:underline">Approve</a>
+      </td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="3" class="text-center text-gray-500 py-4">No pending admins.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+
+{% endblock %}

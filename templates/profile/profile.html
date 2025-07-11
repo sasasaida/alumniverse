@@ -1,0 +1,676 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Your Profile | AlumniVerse{% endblock %}
+
+{% block extra_head %}
+<style>
+  .profile-section {
+    background-color: var(--parchment);
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+    padding: 2.5rem;
+    margin-bottom: 2.5rem;
+    border: 1px solid rgba(196, 162, 74, 0.2);
+    position: relative;
+  }
+  
+  .profile-section:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(to bottom, var(--gold-light), var(--gold-dark));
+  }
+  
+  .profile-picture {
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid var(--gold-light);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s ease;
+  }
+  
+  .profile-picture:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 30px rgba(196, 162, 74, 0.4);
+    border-color: var(--gold-dark);
+  }
+  
+  .profile-nav {
+    border-bottom: 2px solid rgba(196, 162, 74, 0.3);
+    margin-bottom: 2rem;
+  }
+  
+  .profile-nav a {
+    position: relative;
+    padding: 0.5rem 1rem;
+    color: var(--secondary-dark);
+    font-family: 'Playfair Display', serif;
+    font-weight: 600;
+    font-size: 1.1rem;
+  }
+  
+  .profile-nav a.active {
+    color: var(--gold-dark);
+  }
+  
+  .profile-nav a:after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 3px;
+    bottom: -2px;
+    left: 0;
+    background: linear-gradient(90deg, var(--gold-light), var(--gold-dark));
+    transition: width 0.4s ease, opacity 0.3s ease;
+    opacity: 0.8;
+  }
+  
+  .profile-nav a:hover:after,
+  .profile-nav a.active:after {
+    width: 100%;
+    opacity: 1;
+  }
+  
+  .highlight-card {
+    background: var(--parchment);
+    border: 1px solid rgba(196, 162, 74, 0.3);
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    transition: all 0.4s ease;
+    position: relative;
+  }
+  
+  .highlight-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.1);
+    border-color: rgba(196, 162, 74, 0.5);
+  }
+  
+  .mentorship-btn {
+    background: linear-gradient(135deg, var(--gold-light), var(--gold-dark));
+    color: var(--primary-dark);
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(196, 162, 74, 0.3);
+    border: none;
+    border-radius: 6px;
+    padding: 0.75rem 1.5rem;
+  }
+  
+  .mentorship-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(196, 162, 74, 0.4);
+  }
+  
+  .message-btn {
+    background: linear-gradient(135deg, var(--secondary-dark), var(--primary-dark));
+    color: white;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    border: none;
+    border-radius: 6px;
+    padding: 0.75rem 1.5rem;
+  }
+  
+  .message-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  }
+  
+  .testimonial-card {
+    background: linear-gradient(to right, var(--cream) 0%, var(--parchment) 100%);
+    border-left: 4px solid var(--gold-light);
+    position: relative;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+  }
+  
+  .section-title {
+    font-family: 'Cinzel', serif;
+    color: var(--secondary-dark);
+    position: relative;
+    display: inline-block;
+    margin-bottom: 2rem;
+    font-size: 1.75rem;
+  }
+  
+  .section-title:after {
+    content: '';
+    position: absolute;
+    width: 60%;
+    height: 3px;
+    bottom: -8px;
+    left: 0;
+    background: linear-gradient(90deg, var(--gold-light), transparent);
+  }
+  
+  .status-badge {
+    background: linear-gradient(135deg, var(--gold-light), var(--gold-dark));
+    color: var(--primary-dark);
+    font-weight: 600;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    position: absolute;
+    bottom: 10px;
+    right: 5px;
+  }
+  
+  .info-card {
+    background: rgba(248, 245, 240, 0.7);
+    border-left: 3px solid var(--gold-light);
+    padding: 1rem;
+    border-radius: 4px;
+  }
+
+  .gold-theme-btns {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 24px;
+  }
+
+  @media (min-width: 768px) {
+    .gold-theme-btns {
+      flex-direction: row;
+    }
+  }
+
+  .gold-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background-color: #A67C52;
+    color: white;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: background 0.3s, transform 0.2s;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .gold-btn:hover {
+    background-color: #8B5E3C;
+    transform: translateY(-1px);
+  }
+
+  .gold-btn.secondary {
+    background-color: #C19A6B;
+  }
+
+  .gold-btn.secondary:hover {
+    background-color: #A67C52;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto py-8 px-4">
+  <!-- Profile Header -->
+  <div class="profile-section animate__animated animate__fadeIn">
+    <div class="flex flex-col md:flex-row items-start gap-8">
+      <!-- Profile Picture - Now Circular -->
+      <div class="relative">
+        <div class="relative rounded-full p-0.3" style="background: linear-gradient(135deg, var(--gold-light), var(--gold-dark))">
+          <img src="{% if profile.picture %}/media/{{ profile.picture }}{% else %}{% static 'images/Profile.png' %}{% endif %}"
+               class="profile-picture">
+        </div>
+        <span class="status-badge">
+          {% if role == 'alumni' %}Alumni{% else %}{% if profile.is_graduate %}Graduate{% else %}Student{% endif %}{% endif %}
+        </span>
+      </div>
+
+      <!-- Profile Info -->
+      <div class="flex-1">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
+          <h1 class="text-3xl font-bold font-serif text-gray-800">
+            {{ profile.full_name }}
+            {% if role == 'student' and profile.is_graduate %}
+            <span class="ml-2 text-xs font-medium bg-green-100 text-green-800 px-2 py-0.5 rounded-full">Graduated</span>
+            {% endif %}
+          </h1>
+          <div class="flex space-x-3 mt-4 sm:mt-0">
+            <a href="{% url 'update_profile' %}" class="mentorship-btn flex items-center gap-2">
+              <i class="fas fa-edit"></i> Edit Profile
+            </a>
+            <a href="{% url 'inbox' %}" class="message-btn flex items-center gap-2">
+              <i class="fas fa-inbox"></i> Inbox
+            </a>
+          </div>
+        </div>
+
+        <!-- Info Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+          <div class="info-card">
+            <p class="text-xs text-gray-600 uppercase mb-1">Department</p>
+            <p class="font-medium">{{ profile.department }}</p>
+          </div>
+
+          {% if role == 'alumni' %}
+          <div class="info-card">
+            <p class="text-xs text-gray-600 uppercase mb-1">Batch</p>
+            <p class="font-medium">{{ profile.batch }}</p>
+          </div>
+          {% else %}
+          <div class="info-card">
+            <p class="text-xs text-gray-600 uppercase mb-1">Year</p>
+            <p class="font-medium">{{ profile.year }}</p>
+          </div>
+          {% endif %}
+
+          {% if role == 'alumni' %}
+          <div class="info-card">
+            <p class="text-xs text-gray-600 uppercase mb-1">Position</p>
+            <p class="font-medium">{{ profile.job_title }} at {{ profile.company }}</p>
+          </div>
+          {% endif %}
+
+          {% if role == 'alumni' and profile.linkedin %}
+          <div class="info-card">
+            <p class="text-xs text-gray-600 uppercase mb-1">LinkedIn</p>
+            <a href="{{ profile.linkedin }}" class="font-medium text-blue-600 hover:underline">{{ profile.linkedin }}</a>
+          </div>
+          {% endif %}
+
+          {% if role == 'student' and profile.interests %}
+          <div class="info-card">
+            <p class="text-xs text-gray-600 uppercase mb-1">Interests</p>
+            <p class="font-medium">{{ profile.interests }}</p>
+          </div>
+          {% endif %}
+        </div>
+
+        {% if role == 'alumni' and profile.bio %}
+        <div class="bg-amber-50 p-4 rounded border border-amber-100">
+          <p class="text-gray-700 italic">"{{ profile.bio }}"</p>
+        </div>
+        {% endif %}
+
+        {% if role == 'student' and not profile.is_graduate %}
+        <div class="mt-6">
+          <form method="post" action="{% url 'graduate_student' profile.student_id %}">
+            {% csrf_token %}
+            <button class="mentorship-btn px-4 py-2">
+              <i class="fas fa-graduation-cap mr-2"></i> Mark as Graduated
+            </button>
+          </form>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  <!-- Student Contributions Section -->
+  {% if role == 'student' %}
+  <section id="drafts" class="profile-section animate__animated animate__fadeIn">
+  <div class="flex items-center justify-between mb-6">
+    <h2 class="section-title">Student Contributions</h2>
+    <a href="{% url 'add_student_draft' %}" class="mentorship-btn flex items-center gap-2">
+      <i class="fas fa-plus"></i> Add Draft
+    </a>
+  </div>
+
+  <!-- Project Section -->
+  <div class="highlight-card p-6 mb-10">
+    <h3 class="text-2xl font-semibold text-gray-800 mb-4 flex items-center gap-3">
+      <div class="bg-amber-100 p-3 rounded-full">
+        <i class="fas fa-project-diagram text-amber-600"></i>
+      </div>
+      Projects
+    </h3>
+    {% if drafts %}
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700 uppercase">Title</th>
+              <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700 uppercase">Description</th>
+              <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700 uppercase">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            {% for draft in drafts %}
+              {% if draft.project_title %}
+              <tr>
+                <td class="px-6 py-4">{{ draft.project_title }}</td>
+                <td class="px-6 py-4">{{ draft.project_desc|truncatewords:15 }}</td>
+                <td class="px-6 py-4">
+                  <a href="{% url 'edit_student_draft' draft.draft_id %}" class="text-blue-600 hover:underline">Edit</a> |
+                  <a href="{% url 'delete_student_draft' draft.draft_id %}" class="text-red-600 hover:underline">Delete</a>
+                </td>
+              </tr>
+              {% endif %}
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <p class="text-gray-600 italic">No projects saved yet.</p>
+    {% endif %}
+  </div>
+
+  <!-- Research Papers Section -->
+  <div class="highlight-card p-6 mb-10">
+    <h3 class="text-2xl font-semibold text-gray-800 mb-4 flex items-center gap-3">
+      <div class="bg-amber-100 p-3 rounded-full">
+        <i class="fas fa-book-open text-amber-600"></i>
+      </div>
+      Research Papers
+    </h3>
+    {% if drafts %}
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700 uppercase">Title</th>
+              <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700 uppercase">Thesis Summary</th>
+              <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700 uppercase">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            {% for draft in drafts %}
+              {% if draft.research_paper %}
+              <tr>
+                <td class="px-6 py-4">{{ draft.research_paper }}</td>
+                <td class="px-6 py-4">{{ draft.thesis_summary|truncatewords:15 }}</td>
+                <td class="px-6 py-4">
+                  <a href="{% url 'edit_student_draft' draft.draft_id %}" class="text-blue-600 hover:underline">Edit</a> |
+                  <a href="{% url 'delete_student_draft' draft.draft_id %}" class="text-red-600 hover:underline">Delete</a>
+                </td>
+              </tr>
+              {% endif %}
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <p class="text-gray-600 italic">No research papers saved yet.</p>
+    {% endif %}
+  </div>
+
+  <!-- Club Activities Section -->
+  <div class="highlight-card p-6 mb-4">
+    <h3 class="text-2xl font-semibold text-gray-800 mb-4 flex items-center gap-3">
+      <div class="bg-amber-100 p-3 rounded-full">
+        <i class="fas fa-users text-amber-600"></i>
+      </div>
+      Club Activities
+    </h3>
+    {% if drafts %}
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700 uppercase">Details</th>
+              <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700 uppercase">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            {% for draft in drafts %}
+              {% if draft.club_details %}
+              <tr>
+                <td class="px-6 py-4">{{ draft.club_details }}</td>
+                <td class="px-6 py-4">
+                  <a href="{% url 'edit_student_draft' draft.draft_id %}" class="text-blue-600 hover:underline">Edit</a> |
+                  <a href="{% url 'delete_student_draft' draft.draft_id %}" class="text-red-600 hover:underline">Delete</a>
+                </td>
+              </tr>
+              {% endif %}
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <p class="text-gray-600 italic">No club activities saved yet.</p>
+    {% endif %}
+  </div>
+</section>
+
+  {% endif %}
+  <!-- Navigation Tabs -->
+  <div class="profile-nav flex gap-8 mb-8 pt-4 animate__animated animate__fadeIn animate__delay-1s">
+    {% if role == 'alumni' %}
+      <a href="#achievements" class="active">Achievements</a>
+      <a href="#jobs">Job Postings</a>
+    {% endif %}
+    <a href="#mentorship">Mentorship</a>
+    <a href="#testimonials">Testimonials</a>
+  </div>
+
+  <!-- Achievements Section -->
+  {% if role == 'alumni' %}
+  <section id="achievements" class="profile-section animate__animated animate__fadeIn">
+    <div class="flex items-center justify-between mb-6">
+      <h2 class="section-title">Achievements</h2>
+      <a href="{% url 'add_achievement' %}" class="mentorship-btn flex items-center gap-2">
+        <i class="fas fa-plus"></i> Add Achievement
+      </a>
+    </div>
+
+    {% if achievements %}
+    <div class="grid gap-6">
+      {% for a in achievements %}
+      <div class="highlight-card p-6">
+        <h3 class="text-xl font-semibold font-serif text-gray-800 mb-2">{{ a.title }}</h3>
+        <p class="text-gray-700 mb-4">{{ a.content|truncatewords:30 }}</p>
+        <div class="flex justify-between items-center">
+          <span class="text-sm text-gray-500">{{ a.date_posted|date:"M d, Y" }}</span>
+          <a href="{% url 'achievement_details' a.achievement_id %}" class="text-amber-600 hover:underline flex items-center gap-1">
+            View <i class="fas fa-arrow-right text-xs"></i>
+          </a>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-8 text-gray-600 italic">
+      No achievements to display yet
+    </div>
+    {% endif %}
+  </section>
+  {% endif %}
+
+  <!-- Job Postings Section -->
+  {% if role == 'alumni' %}
+  <section id="jobs" class="profile-section animate__animated animate__fadeIn">
+    <div class="flex items-center justify-between mb-6">
+      <h2 class="section-title">Job Postings</h2>
+      <a href="{% url 'add_job_posting' %}" class="mentorship-btn flex items-center gap-2">
+        <i class="fas fa-plus"></i> Add Job
+      </a>
+    </div>
+
+    {% if jobs_posted %}
+    <div class="grid gap-6">
+      {% for job in jobs_posted %}
+      <div class="highlight-card p-6">
+        <div class="flex justify-between items-start mb-2">
+          <h3 class="text-xl font-semibold font-serif text-gray-800">{{ job.title }}</h3>
+          <span class="px-3 py-1 rounded-full text-xs bg-blue-100 text-blue-800">
+            {{ job.job_type|default:"Full-time" }}
+          </span>
+        </div>
+        <p class="text-amber-700 font-medium mb-3">{{ job.company }}</p>
+        <p class="text-gray-700 mb-4">{{ job.description|truncatewords:20 }}</p>
+        <a href="{% url 'job_details' job.job_id %}" class="text-amber-600 hover:underline flex items-center gap-1">
+          View details <i class="fas fa-arrow-right text-xs"></i>
+        </a>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-8 text-gray-600 italic">
+      No job postings to display yet
+    </div>
+    {% endif %}
+  </section>
+  {% endif %}
+
+  <!-- Testimonials Section -->
+  <section id="testimonials" class="profile-section animate__animated animate__fadeIn">
+    <div class="flex items-center justify-between mb-6">
+      <h2 class="section-title">Testimonials</h2>
+      <a href="{% url 'submit_testimonial' %}" class="mentorship-btn flex items-center gap-2">
+        <i class="fas fa-plus"></i> Add Testimonial
+      </a>
+    </div>
+
+    {% if testimonials %}
+    <div class="grid gap-6 md:grid-cols-2">
+      {% for t in testimonials %}
+      <div class="testimonial-card p-6">
+        <p class="text-gray-700 italic mb-4">"{{ t.content }}"</p>
+        <div class="flex justify-between items-center">
+          <span class="text-sm text-gray-500">{{ t.date_posted|date:"M d, Y" }}</span>
+          <div class="flex gap-3">
+            <a href="{% url 'edit_testimonial' t.testimonial_id %}" class="text-sm text-amber-600 hover:underline">
+              Edit
+            </a>
+            <a href="{% url 'delete_testimonial' t.testimonial_id %}" class="text-sm text-red-600 hover:underline"
+               onclick="return confirm('Are you sure you want to delete this testimonial?');">
+              Delete
+            </a>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-8 text-gray-600 italic">
+      No testimonials to display yet
+    </div>
+    {% endif %}
+  </section>
+
+  <!-- Mentorship Section -->
+  <section id="mentorship" class="profile-section animate__animated animate__fadeIn">
+    <div class="flex items-center justify-between mb-6">
+      <h2 class="section-title">Mentorship</h2>
+      {% if role == 'student' %}
+      <a href="{% url 'add_mentorship' %}" class="mentorship-btn flex items-center gap-2">
+        <i class="fas fa-plus"></i> Request Mentorship
+      </a>
+      {% else %}
+      <a href="{% url 'mentorship_requests_for_alumni' %}" class="mentorship-btn flex items-center gap-2">
+        <i class="fas fa-inbox"></i> View Requests
+      </a>
+      {% endif %}
+    </div>
+
+    {% if role == 'student' %}
+      {% if active_mentorship %}
+      <h3 class="font-medium text-gray-800 mb-4">Active Mentorship</h3>
+      <div class="grid gap-6 mb-8">
+        {% for m in active_mentorship %}
+        <div class="highlight-card p-6">
+          <h4 class="text-lg font-medium text-gray-800 mb-1">{{ m.mentor_name }}</h4>
+          <p class="text-gray-600 mb-3">{{ m.department }}</p>
+          <p class="text-sm text-gray-500">Started {{ m.start_date|date:"M d, Y" }}</p>
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      {% if completed_mentorship %}
+      <h3 class="font-medium text-gray-800 mb-4">Completed Mentorship</h3>
+      <div class="grid gap-6">
+        {% for cm in completed_mentorship %}
+        <div class="highlight-card p-6">
+          <h4 class="text-lg font-medium text-gray-800 mb-1">{{ cm.mentor_name }}</h4>
+          <p class="text-gray-600 mb-3">{{ cm.department }}</p>
+          <div class="flex items-center justify-between">
+            <p class="text-sm text-gray-500">Started {{ cm.start_date|date:"M d, Y" }}</p>
+            <span class="text-xs px-2 py-1 rounded-full bg-green-100 text-green-800">{{ cm.status }}</span>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      {% if not active_mentorship and not completed_mentorship %}
+      <div class="text-center py-8 text-gray-600 italic">
+        No active or completed mentorship
+      </div>
+      {% endif %}
+    {% endif %}
+
+    {% if role == 'alumni' %}
+    <div class="grid gap-8 md:grid-cols-2">
+      <div>
+        <h3 class="font-medium text-gray-800 mb-4">Current Mentees ({{ current_mentees|length }})</h3>
+        {% if current_mentees %}
+        <div class="grid gap-4">
+          {% for mentee in current_mentees %}
+          <div class="highlight-card p-6">
+            <div class="flex justify-between items-start">
+              <div>
+                <h4 class="text-lg font-medium text-gray-800 mb-1">{{ mentee.student_name }}</h4>
+                <p class="text-gray-600 mb-3">{{ mentee.department }}</p>
+                <p class="text-sm text-gray-500">Started {{ mentee.start_date|date:"M d, Y" }}</p>
+              </div>
+              <form method="POST" action="{% url 'end_mentorship' mentee.mentorship_id %}">
+                {% csrf_token %}
+                <button type="submit" class="text-xs px-3 py-1 rounded-full bg-red-100 text-red-700 hover:bg-red-200">
+                  End
+                </button>
+              </form>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        {% else %}
+        <div class="text-center py-8 text-gray-600 italic">
+          No active mentees
+        </div>
+        {% endif %}
+      </div>
+
+      {% if completed_mentorship %}
+      <div>
+        <h3 class="font-medium text-gray-800 mb-4">Completed Mentorship</h3>
+        <div class="grid gap-4">
+          {% for cm in completed_mentorship %}
+          <div class="highlight-card p-6">
+            <h4 class="text-lg font-medium text-gray-800 mb-1">{{ cm.student_name }}</h4>
+            <p class="text-gray-600 mb-3">{{ cm.department }}</p>
+            <div class="flex items-center justify-between">
+              <p class="text-sm text-gray-500">Started {{ cm.start_date|date:"M d, Y" }}</p>
+              <span class="text-xs px-2 py-1 rounded-full bg-green-100 text-green-800">{{ cm.status }}</span>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+    </div>
+    {% endif %}
+  </section>
+
+  {% if role == 'student' %}
+  <section class="profile-section animate__animated animate__fadeIn">
+    <div class="flex items-center justify-between mb-6">
+      <h2 class="section-title">Resources</h2>
+    </div>
+
+    <div class="gold-theme-btns">
+      <a href="{% url 'generate_cv_pdf' profile.student_id %}" class="mentorship-btn">
+        <i class="fas fa-file-pdf"></i> Download CV (PDF)
+      </a>
+
+      <a href="{% url 'recommend' %}" class="message-btn secondary">
+        <i class="fas fa-star"></i> Recommendations
+      </a>
+    </div>
+  </section>
+  {% endif %}
+
+</div>
+
+{% endblock %}

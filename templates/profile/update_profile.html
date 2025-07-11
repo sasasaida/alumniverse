@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% load form_tags %}
+
+
+{% block content %}
+<div class="mt-10 mb-16 px-4 md:px-8 lg:px-20">
+  <h1 class="text-4xl font-serif font-bold text-center text-[var(--primary-dark)] mb-8">Update Your Profile</h1>
+
+  <form action="{% url 'update_profile' %}" method="post" enctype="multipart/form-data" class="bg-[var(--parchment)] shadow-xl rounded-xl p-8 space-y-6 max-w-3xl mx-auto border border-[var(--gold-light)]">
+    {% csrf_token %}
+
+    {% for field in form %}
+      {% if field.name != 'picture' and field.name != 'remove_picture' %}
+        <div>
+          <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-[var(--primary-dark)] tracking-wide mb-1">{{ field.label }}</label>
+          {{ field|add_class:"w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--gold-light)]" }}
+          {% if field.help_text %}
+            <p class="text-xs text-gray-500 mt-1 italic">{{ field.help_text }}</p>
+          {% endif %}
+          {% if field.errors %}
+            <p class="text-red-600 text-sm mt-1">{{ field.errors }}</p>
+          {% endif %}
+        </div>
+      {% endif %}
+    {% endfor %}
+
+    <!-- Profile Picture Field -->
+    <div>
+      <label for="{{ form.picture.id_for_label }}" class="block text-sm font-medium text-[var(--primary-dark)] tracking-wide mb-1">Profile Picture</label>
+      {{ form.picture }}
+      {% if form.picture.errors %}
+        <p class="text-red-600 text-sm mt-1">{{ form.picture.errors }}</p>
+      {% endif %}
+      <p class="text-xs text-gray-500 italic mt-1">Upload a new picture (optional).</p>
+    </div>
+
+    {% if form.initial.picture %}
+      <div class="flex items-center gap-3">
+        <label for="{{ form.remove_picture.id_for_label }}" class="text-sm font-medium text-[var(--primary-dark)]">Remove Current Picture</label>
+        {{ form.remove_picture }}
+      </div>
+      <div class="mt-2">
+        <p class="text-sm font-medium text-[var(--primary-dark)] mb-1">Current Picture:</p>
+        <img src="/media/{{ form.initial.picture }}" alt="Current profile picture" class="w-32 h-32 rounded-full border-2 border-[var(--gold-dark)] shadow-md">
+      </div>
+    {% endif %}
+
+    <!-- Submit Button -->
+    <button type="submit"
+      class="px-6 py-3 rounded-lg font-semibold shadow-md transition duration-300 transform hover:-translate-y-1"
+          style="
+            background-color: var(--gold-light);
+            color: var(--primary-dark);
+            border: 1px solid var(--gold-dark);
+          "
+          onmouseover="this.style.backgroundColor='var(--gold-dark)'; this.style.color='white';"
+          onmouseout="this.style.backgroundColor='var(--gold-light)'; this.style.color='var(--primary-dark)';">
+      Save Changes
+    </button>
+  </form>
+
+  <p class="mt-6 text-center">
+    <a href="{% url 'profile' %}" class="text-[var(--gold-dark)] underline hover:text-[var(--primary-dark)] transition">← Back to Profile</a>
+  </p>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const pictureInput = document.getElementById('{{ form.picture.id_for_label }}');
+      if (pictureInput) {
+        pictureInput.value = '';
+      }
+    });
+  </script>
+</div>
+{% endblock %}

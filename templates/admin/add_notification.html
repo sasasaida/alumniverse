@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="mt-10 mb-16 px-4 md:px-8 lg:px-20">
+  <div class="max-w-3xl mx-auto bg-[var(--parchment)] border border-[var(--gold-light)] shadow-xl rounded-xl p-8">
+    <h2 class="text-3xl font-serif font-bold text-center text-[var(--primary-dark)] mb-8">Add Notification</h2>
+
+    <form method="post" class="space-y-6">
+      {% csrf_token %}
+
+      <!-- Title -->
+      <div>
+        <label for="title" class="block text-sm font-medium text-[var(--primary-dark)] tracking-wide mb-1">Title:</label>
+        <input type="text" name="title" id="title" required
+               class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--gold-light)]">
+      </div>
+
+      <!-- Content -->
+      <div>
+        <label for="content" class="block text-sm font-medium text-[var(--primary-dark)] tracking-wide mb-1">Content:</label>
+        <textarea name="content" id="content" rows="5" required
+                  class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--gold-light)]"></textarea>
+      </div>
+
+      <!-- Submit Button -->
+      <div class="flex justify-start">
+        <button type="submit"
+          class="px-6 py-3 rounded-xl font-semibold shadow-md transition duration-300 transform hover:-translate-y-1"
+          style="background-color: var(--gold-light); color: var(--primary-dark); border: 1px solid var(--gold-dark);"
+          onmouseover="this.style.backgroundColor='var(--gold-dark)'; this.style.color='white';"
+          onmouseout="this.style.backgroundColor='var(--gold-light)'; this.style.color='var(--primary-dark)';">
+          Submit
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="mt-10 mb-16 px-4 md:px-8 lg:px-20">
+
+  {% if event.event_id %}
+    <div class="max-w-4xl mx-auto bg-[var(--parchment)] border border-[var(--gold-light)] shadow-xl rounded-xl overflow-hidden">
+
+      <!-- Event Banner -->
+      {% if event.image %}
+        <div class="w-full h-64 overflow-hidden">
+          <img src="/media/{{ event.image }}" alt="Event Banner" class="w-full h-full object-cover">
+        </div>
+      {% endif %}
+
+      <div class="p-8">
+        <!-- Title -->
+        <h1 class="text-3xl font-serif font-bold text-center text-[var(--primary-dark)] mb-6">{{ event.title }}</h1>
+
+        <!-- Date & Location -->
+        <div class="space-y-2 text-[var(--primary-dark)]">
+          {% if event.date %}
+            <p><strong>Date:</strong> {{ event.date }}</p>
+          {% endif %}
+          {% if event.location %}
+            <p><strong>Location:</strong> {{ event.location }}</p>
+          {% endif %}
+        </div>
+
+        <!-- Description -->
+        {% if event.description %}
+          <div class="mt-4 text-gray-800 leading-relaxed">
+            <strong>Description:</strong>
+            <p class="mt-1">{{ event.description }}</p>
+          </div>
+        {% endif %}
+
+        <!-- Register or Cancel -->
+        {% if event.date >= today %}
+          {% if not request.user.is_staff %}
+            <form method="post" class="mt-6 flex flex-wrap gap-4 justify-center">
+              {% csrf_token %}
+              <input type="hidden" name="event_id" value="{{ selected_event_id }}">
+              <button type="submit" name="action" value="register"
+                class="px-6 py-3 rounded-lg font-semibold shadow-md transition duration-300 transform hover:-translate-y-1"
+                style="
+                  background-color: var(--gold-light);
+                  color: var(--primary-dark);
+                  border: 1px solid var(--gold-dark);
+                "
+                onmouseover="this.style.backgroundColor='var(--gold-dark)'; this.style.color='white';"
+                onmouseout="this.style.backgroundColor='var(--gold-light)'; this.style.color='var(--primary-dark)';">
+                Register
+              </button>
+              <button type="submit" name="action" value="cancel"
+                class="px-6 py-3 rounded-lg font-semibold shadow-md transition duration-300 transform hover:-translate-y-1
+                       bg-red-600 text-white border border-red-700 hover:bg-red-700">
+                Cancel Registration
+              </button>
+            </form>
+          {% endif %}
+        {% else %}
+          <p class="mt-6 text-center text-red-600 font-semibold">This event has ended.</p>
+        {% endif %}
+      </div>
+    </div>
+  {% endif %}
+
+  <!-- Registered Users -->
+  <div class="max-w-4xl mx-auto mt-10 bg-[var(--parchment)] border border-[var(--gold-light)] shadow-xl rounded-xl p-6">
+    <h2 class="text-2xl font-serif font-bold text-[var(--primary-dark)] mb-4">Registered Users</h2>
+
+    {% if registered_users %}
+      <div class="overflow-x-auto">
+        <table class="w-full border-collapse text-[var(--primary-dark)]">
+          <thead class="bg-[var(--gold-light)] text-[var(--primary-dark)]">
+            <tr>
+              <th class="border px-4 py-2 text-left">Name</th>
+              <th class="border px-4 py-2 text-left">Role</th>
+              <th class="border px-4 py-2 text-left">Registered On</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for user in registered_users %}
+            <tr class="hover:bg-[var(--cream)]">
+              <td class="border px-4 py-2">{{ user.full_name }}</td>
+              <td class="border px-4 py-2">{{ user.role }}</td>
+              <td class="border px-4 py-2">{{ user.registration_date }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <p class="text-gray-600 italic">No one has registered yet.</p>
+    {% endif %}
+  </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="mt-10 mb-16 px-4 md:px-8 lg:px-20">
+  <div class="max-w-3xl mx-auto bg-[var(--parchment)] border border-[var(--gold-light)] shadow-xl rounded-xl p-8">
+    <h2 class="text-3xl font-serif font-bold text-center text-[var(--primary-dark)] mb-8">Edit Event</h2>
+
+    <form method="post" class="space-y-6">
+      {% csrf_token %}
+
+      <!-- Event Name -->
+      <div>
+        <label for="title" class="block text-sm font-medium text-[var(--primary-dark)] tracking-wide mb-1">Event Name:</label>
+        <input type="text" id="title" name="title" value="{{ event.title }}" required
+               class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--gold-light)]">
+      </div>
+
+      <!-- Event Date -->
+      <div>
+        <label for="date" class="block text-sm font-medium text-[var(--primary-dark)] tracking-wide mb-1">Event Date:</label>
+        <input type="date" id="date" name="date" value="{{ event.date|date:'Y-m-d' }}" required
+               class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--gold-light)]">
+      </div>
+
+      <!-- Event Location -->
+      <div>
+        <label for="location" class="block text-sm font-medium text-[var(--primary-dark)] tracking-wide mb-1">Event Location:</label>
+        <input type="text" id="location" name="location" value="{{ event.location }}" required
+               class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--gold-light)]">
+      </div>
+
+      <!-- Description -->
+      <div>
+        <label for="description" class="block text-sm font-medium text-[var(--primary-dark)] tracking-wide mb-1">Description:</label>
+        <textarea id="description" name="description" rows="5" required
+                  class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--gold-light)]">{{ event.description }}</textarea>
+      </div>
+
+      <!-- Event Image -->
+      <div>
+        <label for="image" class="block text-sm font-medium text-[var(--primary-dark)] tracking-wide mb-1">Event Image:</label>
+        <input type="file" id="image" name="image" accept="image/*"
+               class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--gold-light)]">
+      </div>
+
+      <!-- Submit Button -->
+      <div class="flex justify-start">
+        <button type="submit"
+          class="px-6 py-3 rounded-xl font-semibold shadow-md transition duration-300 transform hover:-translate-y-1"
+          style="background-color: var(--gold-light); color: var(--primary-dark); border: 1px solid var(--gold-dark);"
+          onmouseover="this.style.backgroundColor='var(--gold-dark)'; this.style.color='var(--primary-dark)';"
+          onmouseout="this.style.backgroundColor='var(--gold-light)'; this.style.color='var(--primary-dark)';">
+          Update Event
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+{% endblock %}

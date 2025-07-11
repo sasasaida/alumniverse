@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="mt-10 mb-16 px-4 md:px-8 lg:px-20">
+  <h2 class="text-3xl font-serif font-bold text-center text-[var(--primary-dark)] mb-8">Post a Job</h2>
+
+  <form method="post" class="w-full max-w-3xl mx-auto bg-[var(--parchment)] p-8 rounded-xl shadow-xl border border-[var(--gold-light)]">
+    {% csrf_token %}
+
+    <div>
+      <label for="title" class="block text-sm font-medium text-[var(--primary-dark)] tracking-wide mb-2">Job Title</label>
+      <input type="text" name="title" required class="w-full p-4 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--gold-light)]">
+    </div>
+
+    <div>
+      <label for="company" class="block text-sm font-medium text-[var(--primary-dark)] tracking-wide mb-2">Company</label>
+      <input type="text" name="company" required class="w-full p-4 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--gold-light)]">
+    </div>
+
+    <div>
+      <label for="description" class="block text-sm font-medium text-[var(--primary-dark)] tracking-wide mb-2">Description</label>
+      <textarea name="description" required class="w-full p-4 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--gold-light)] h-32"></textarea>
+    </div>
+
+    <div>
+      <label for="deadline" class="block text-sm font-medium text-[var(--primary-dark)] tracking-wide mb-2">Application Deadline</label>
+      <input type="date" name="deadline" required class="w-full p-4 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--gold-light)]">
+    </div>
+
+    <div class="flex justify-start mt-5 mb-5">
+      <button type="submit"
+              class="px-6 py-3 rounded-xl font-semibold shadow-md transition duration-300 transform hover:-translate-y-1
+         bg-[var(--gold-light)] text-[var(--primary-dark)] border border-[var(--gold-dark)]
+         hover:bg-[var(--gold-dark)] hover:text-[var(--primary-dark)]">
+        Post Job
+      </button>
+    </div>
+  </form>
+</div>
+
+{% endblock %}

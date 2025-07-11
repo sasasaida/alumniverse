@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ student.full_name }} - Academic Portfolio</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333333;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+
+        header {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #2c3e50;
+            margin: 0;
+            font-size: 2.2em;
+            font-weight: 600;
+        }
+
+        .subtitle {
+            color: #3498db;
+            font-size: 1.1em;
+            margin-top: 5px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .info-item {
+            background-color: #e9ecef;
+            padding: 12px;
+            border-radius: 5px;
+            font-size: 0.95em;
+        }
+
+        .info-item strong {
+            color: #2c3e50;
+        }
+
+        .section {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+
+        .section h2 {
+            color: #3498db;
+            border-bottom: 2px solid #e9ecef;
+            padding-bottom: 10px;
+            margin-top: 0;
+            font-size: 1.5em;
+        }
+
+        .item {
+            padding: 15px;
+            margin-bottom: 15px;
+            border-left: 4px solid #3498db;
+            background-color: #f8f9fa;
+            border-radius: 0 5px 5px 0;
+        }
+
+        .item strong {
+            color: #2c3e50;
+            font-size: 1.1em;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .empty-message {
+            color: #495057;
+            font-style: italic;
+            text-align: center;
+            padding: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            header {
+                padding: 20px;
+            }
+
+            .section {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>{{ student.full_name }}</h1>
+        <div class="subtitle">Academic Portfolio</div>
+
+        <div class="info-grid">
+            <div class="info-item">
+                <strong>Department</strong><br>
+                {{ student.department }}
+            </div>
+            <div class="info-item">
+                <strong>Year</strong><br>
+                {{ student.year }}
+            </div>
+            <div class="info-item">
+                <strong>Interests</strong><br>
+                {{ student.interests }}
+            </div>
+        </div>
+    </header>
+
+    <div class="section">
+        <h2>Projects</h2>
+        {% for d in drafts %}
+            {% if d.project_title %}
+                <div class="item">
+                    <strong>{{ d.project_title }}</strong>
+                    {{ d.project_desc }}
+                </div>
+            {% endif %}
+        {% empty %}
+            <p class="empty-message">No projects to display</p>
+        {% endfor %}
+    </div>
+
+    <div class="section">
+        <h2>Research Papers</h2>
+        {% for d in drafts %}
+            {% if d.research_paper %}
+                <div class="item">
+                    <strong>{{ d.research_paper }}</strong>
+                    {{ d.thesis_summary }}
+                </div>
+            {% endif %}
+        {% empty %}
+            <p class="empty-message">No research papers to display</p>
+        {% endfor %}
+    </div>
+
+    <div class="section">
+        <h2>Club Activities</h2>
+        {% for d in drafts %}
+            {% if d.club_details %}
+                <div class="item">
+                    {{ d.club_details }}
+                </div>
+            {% endif %}
+        {% empty %}
+            <p class="empty-message">No club activities to display</p>
+        {% endfor %}
+    </div>
+</body>
+</html>

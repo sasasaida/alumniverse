@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="mt-10 mb-16 px-4 md:px-8 lg:px-20">
+  <div class="max-w-3xl mx-auto bg-[var(--parchment)] border border-[var(--gold-light)] shadow-xl rounded-xl p-8">
+    <h2 class="text-3xl font-serif font-bold text-center text-[var(--primary-dark)] mb-6">Edit Your Testimonial</h2>
+
+    <form method="POST" class="space-y-6">
+      {% csrf_token %}
+
+      <div>
+        <label for="content" class="block text-sm font-medium text-[var(--primary-dark)] tracking-wide mb-1">
+          Testimonial:
+        </label>
+        <textarea name="content" id="content" rows="6" required
+                  class="w-full p-4 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--gold-light)]">{{ testimonial.content }}</textarea>
+      </div>
+
+      <div class="flex items-center gap-4">
+        <button type="submit"
+                class="px-6 py-3 rounded-xl font-semibold shadow-md transition duration-300 transform hover:-translate-y-1
+         bg-[var(--gold-light)] text-[var(--primary-dark)] border border-[var(--gold-dark)]
+         hover:bg-[var(--gold-dark)] hover:text-[var(--primary-dark)]">
+          Update
+        </button>
+        <a href="{% url 'profile' %}" class="text-[var(--primary-dark)] underline hover:text-[var(--gold-dark)] transition">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+{% endblock %}

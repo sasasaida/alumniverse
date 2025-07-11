@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="mt-10 mb-16 px-4 md:px-8 lg:px-20">
+  <h1 class="text-4xl font-serif font-bold text-center text-[var(--primary-dark)] mb-8">Add New Achievement</h1>
+
+  {% if messages %}
+    <div id="toast-container" class="fixed top-6 right-6 z-50 space-y-2">
+      {% for message in messages %}
+        <div class="toast bg-[var(--gold-light)] text-[var(--primary-dark)] px-6 py-4 rounded-lg shadow-lg border border-[var(--gold-dark)] animate__animated animate__fadeInRight">
+          <span class="font-semibold">{{ message }}</span>
+        </div>
+      {% endfor %}
+    </div>
+
+    <script>
+      setTimeout(() => {
+        const toasts = document.querySelectorAll('.toast');
+        toasts.forEach(toast => {
+          toast.classList.add('animate__fadeOutRight');
+          setTimeout(() => toast.remove(), 1000);  // Remove after fade out
+        });
+      }, 3000);  // Show for 3 seconds
+    </script>
+  {% endif %}
+
+
+  <form method="POST"
+        class="bg-[var(--parchment)] shadow-xl rounded-xl p-8 space-y-6 max-w-3xl mx-auto border border-[var(--gold-light)]">
+    {% csrf_token %}
+
+    <div>
+      <label for="title" class="block text-sm font-medium text-[var(--primary-dark)] tracking-wide mb-1">Title:</label>
+      <input type="text" name="title" id="title" required
+             class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--gold-light)]">
+    </div>
+
+    <div>
+      <label for="content" class="block text-sm font-medium text-[var(--primary-dark)] tracking-wide mb-1">Content:</label>
+      <textarea name="content" id="content" rows="5" required
+                class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--gold-light)]"></textarea>
+    </div>
+
+    <div>
+      <label for="date_posted" class="block text-sm font-medium text-[var(--primary-dark)] tracking-wide mb-1">Date Posted:</label>
+      <input type="date" name="date_posted" id="date_posted"
+             class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--gold-light)]">
+    </div>
+
+    <button type="submit"
+            class="px-6 py-3 rounded-xl font-semibold shadow-md transition duration-300 transform hover:-translate-y-1
+         bg-[var(--gold-light)] text-[var(--primary-dark)] border border-[var(--gold-dark)]
+         hover:bg-[var(--gold-dark)] hover:text-[var(--primary-dark)]">
+      Submit
+    </button>
+  </form>
+</div>
+
+{% endblock %}

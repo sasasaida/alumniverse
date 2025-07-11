@@ -1,0 +1,301 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AlumniVerse - {% block title %}{% endblock %}</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Montserrat:wght@300;400;500;600&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+  <style>
+    :root {
+      --primary-dark: #1a120b;
+      --secondary-dark: #3e2f25;
+      --gold-light: #c4a24a;
+      --gold-dark: #9c7c38;
+      --cream: #f8f5f0;
+      --parchment: #f3e9d2;
+    }
+    
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background-color: var(--cream);
+      color: var(--primary-dark);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .header {
+      background: linear-gradient(135deg, var(--primary-dark), var(--secondary-dark));
+      border-bottom: 2px solid var(--gold-light);
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+    }
+    
+    .nav-link {
+      color: var(--cream);
+      transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+      position: relative;
+      letter-spacing: 0.5px;
+      font-weight: 500;
+      text-transform: uppercase;
+      font-size: 0.85rem;
+    }
+    
+    .nav-link:hover {
+      color: var(--gold-light);
+      transform: translateY(-2px);
+    }
+    
+    .nav-link:after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 1px;
+      bottom: -4px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(90deg, transparent, var(--gold-light), transparent);
+      transition: width 0.4s ease;
+    }
+    
+    .nav-link:hover:after {
+      width: 100%;
+    }
+    
+    .logo-text {
+      font-family: 'Cinzel', serif;
+      font-size: 1.9rem;
+      font-weight: 700;
+      color: var(--cream);
+      letter-spacing: 2px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.4);
+      transition: all 0.5s ease;
+    }
+    
+    .logo-text:hover {
+      text-shadow: 0 0 10px rgba(196, 162, 74, 0.7);
+    }
+    
+    .logo-text span {
+      color: var(--gold-light);
+      position: relative;
+    }
+    
+    .logo-text span:after {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 2px;
+      bottom: -2px;
+      left: 0;
+      background: var(--gold-light);
+      transform: scaleX(0);
+      transform-origin: right;
+      transition: transform 0.4s ease;
+    }
+    
+    .logo-text:hover span:after {
+      transform: scaleX(1);
+      transform-origin: left;
+    }
+    
+    /* Removed btn-royal styles since we're not using them anymore */
+    
+    .crest-shadow {
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+      transition: all 0.5s ease;
+    }
+    
+    .crest-shadow:hover {
+      transform: rotate(5deg) scale(1.05);
+      filter: drop-shadow(0 6px 12px rgba(196, 162, 74, 0.5));
+    }
+    
+    .header-container {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      width: 100%;
+    }
+    
+    .left-nav, .right-nav {
+      display: flex;
+      padding: 0 2rem;
+    }
+    
+    .main-content {
+      background-color: transparent;
+      box-shadow: none;
+      border: none;
+    }
+    
+    .footer {
+      background: linear-gradient(135deg, var(--primary-dark), var(--secondary-dark));
+      border-top: 2px solid var(--gold-light);
+      position: relative;
+      margin-top: auto;
+    }
+    
+    .footer:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--gold-light), transparent);
+    }
+    
+    .social-icon {
+      transition: all 0.3s ease;
+      color: var(--gold-light);
+    }
+    
+    .social-icon:hover {
+      color: var(--cream);
+      transform: translateY(-3px) scale(1.1);
+    }
+    
+    .message-error {
+      color: #ef4444;
+    }
+    
+    .message-success {
+      color: #10b981;
+    }
+    
+    @media (max-width: 768px) {
+      .header-container {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto auto;
+        gap: 1rem;
+        text-align: center;
+      }
+      
+      .left-nav, .right-nav {
+        padding: 0;
+        justify-content: center;
+      }
+    }
+  </style>
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="header py-1 sticky top-0 z-50">
+    <div class="container mx-auto px-6 header-container">
+      <!-- Left Navigation -->
+      <nav class="left-nav animate__animated animate__fadeInLeft">
+        <ul class="flex space-x-6">
+          <li><a href="{% url 'public_profiles_list' %}" class="nav-link">people</a></li>
+          <li><a href="{% url 'events_list' %}" class="nav-link">Events</a></li>
+          <li><a href="{% url 'view_jobs' %}" class="nav-link">Jobs</a></li>
+          <li><a href="{% url 'view_achievements' %}" class="nav-link">Achievements</a></li>
+          <li><a href="{% url 'our_community' %}" class="nav-link">Community</a></li>
+        </ul>
+      </nav>
+      
+      <!-- Centered Logo -->
+      <div class="flex items-center space-x-4 center-logo animate__animated animate__fadeInDown">
+        <a href="{% url 'home' %}" class="flex items-center space-x-4">
+          <img src="{% static 'images/Hogwarts-Crest.png' %}" alt="Logo" class="h-14 w-14 object-contain crest-shadow" />
+          <h1 class="logo-text">Alumni<span>Verse</span></h1>
+        </a>
+      </div>
+      
+      <!-- Right Navigation -->
+      <nav class="right-nav animate__animated animate__fadeInRight">
+        <ul class="flex space-x-6">
+        
+          <li><a href="{% url 'gallery' %}" class="nav-link">Gallery</a></li>
+          {% if user.is_authenticated %}
+            {% if user.is_staff %}
+              <li><a href="{% url 'admin_dashboard' %}" class="nav-link">Admin</a></li>
+            {% else %}
+              <li><a href="{% url 'profile' %}" class="nav-link">Profile</a></li>
+              <li><a href="{% url 'inbox' %}" class="nav-link">Inbox</a></li>
+              <li><a href="{% url 'notifications_page' %}" class="nav-link">Notifications</a></li>
+            {% endif %}
+            <li><a href="{% url 'logout' %}" class="nav-link">Logout</a></li>  <!-- Changed from btn-royal to nav-link -->
+          {% else %}
+            <li><a href="{% url 'login' %}" class="nav-link">Login</a></li>
+            <li><a href="{% url 'register' %}" class="nav-link">Register</a></li>
+          {% endif %}
+          <li><a href="{% url 'contact' %}" class="nav-link">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Messages -->
+  {% if messages %}
+<div class="container mx-auto px-4 mt-6 space-y-3 animate__animated animate__fadeIn">
+  {% for msg in messages %}
+    <div class="flex items-center justify-between p-4 rounded-lg shadow-md border-l-4
+                {% if msg.tags == 'error' %}
+                  bg-red-100 border-red-500 text-red-800
+                {% elif msg.tags == 'success' %}
+                  bg-green-100 border-green-500 text-green-800
+                {% else %}
+                  bg-yellow-100 border-yellow-500 text-yellow-800
+                {% endif %}
+    ">
+      <div class="flex items-center gap-2">
+        {% if msg.tags == 'error' %}
+          <i class="fas fa-times-circle"></i>
+        {% elif msg.tags == 'success' %}
+          <i class="fas fa-check-circle"></i>
+        {% else %}
+          <i class="fas fa-info-circle"></i>
+        {% endif %}
+        <span class="text-sm font-medium">{{ msg }}</span>
+      </div>
+    </div>
+  {% endfor %}
+</div>
+{% endif %}
+
+
+  <!-- Main Content -->
+  <main class="flex-grow ">
+    {% block content %}
+    {% endblock %}
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer text-white py-12">
+    <div class="container mx-auto px-6">
+      <div class="flex flex-col md:flex-row justify-between items-center">
+        <div class="flex items-center space-x-4 mb-6 md:mb-0 animate__animated animate__fadeInUp">
+          <img src="{% static 'images/Hogwarts-Crest.png' %}" alt="Logo" class="h-12 w-12 object-contain" />
+          <h2 class="logo-text text-xl">Alumni<span>Verse</span></h2>
+        </div>
+        <div class="flex flex-col items-center md:items-end animate__animated animate__fadeInUp animate__delay-1s">
+          <p class="text-sm opacity-80 mb-4 italic font-serif">"Where legacies converge and futures unfold"</p>
+          <div class="flex space-x-6 text-lg">
+            <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
+            <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+          </div>
+        </div>
+      </div>
+      <div class="border-t border-gold-700 mt-8 pt-6 text-center text-xs opacity-70 animate__animated animate__fadeIn animate__delay-2s">
+        © 2025 AlumniVerse. All privileges reserved. | Crafted with <i class="fas fa-heart text-red-400 mx-1"></i> for the magical community
+      </div>
+      <div class="flex justify-center gap-4 mt-4">
+        <a href="#" class="hover:text-white">Facebook</a>
+        <a href="#" class="hover:text-white">LinkedIn</a>
+        <a href="#" class="hover:text-white">Instagram</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+  {% block extra_scripts %}{% endblock %}
+
+</body>
+</html>

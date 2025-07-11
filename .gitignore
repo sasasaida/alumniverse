@@ -1,0 +1,57 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Django-related
+*.log
+*.pot
+*.pyc
+*.sqlite3
+db.sqlite3
+media/
+staticfiles/
+.env
+
+# Local Django settings or secrets
+*.env
+.env.*
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv/
+pip-log.txt
+
+# IDEs and editors
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Testing
+coverage/
+htmlcov/
+.tox/
+.nox/
+.pytest_cache/
+
+# Migrations (optional — keep if you want full history)
+# */migrations/
+# !*/migrations/__init__.py
+
+# Node (if using Tailwind or npm tools)
+node_modules/
+package-lock.json
+dist/
+build/
+
+# Compiled frontend assets (optional)
+*.css.map
+*.js.map

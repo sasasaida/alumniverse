@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="mt-10 mb-16 px-4">
+  <h2 class="text-3xl font-bold text-center text-[var(--primary-dark)] mb-10">Search Results for "{{ query }}"</h2>
+
+  <div class="max-w-4xl mx-auto space-y-8">
+
+    {% if results.alumni %}
+    <div class="bg-[var(--parchment)] border border-[var(--gold-light)] rounded-xl shadow-md p-6">
+      <h3 class="text-xl font-semibold text-blue-700 mb-4">Alumni</h3>
+      <ul class="space-y-2">
+        {% for a in results.alumni %}
+          <li class="text-sm">{{ a.full_name }} — {{ a.department }} — {{ a.job_title }} at {{ a.company }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+
+    {% if results.students %}
+    <div class="bg-[var(--parchment)] border border-[var(--gold-light)] rounded-xl shadow-md p-6">
+      <h3 class="text-xl font-semibold text-green-700 mb-4">Students</h3>
+      <ul class="space-y-2">
+        {% for s in results.students %}
+          <li class="text-sm">{{ s.full_name }} — {{ s.department }} — Interests: {{ s.interests }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+
+    {% if results.events %}
+    <div class="bg-[var(--parchment)] border border-[var(--gold-light)] rounded-xl shadow-md p-6">
+      <h3 class="text-xl font-semibold text-purple-700 mb-4">Events</h3>
+      <ul class="space-y-2">
+        {% for e in results.events %}
+          <li class="text-sm">{{ e.title }} — {{ e.location }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+
+    {% if results.achievements %}
+    <div class="bg-[var(--parchment)] border border-[var(--gold-light)] rounded-xl shadow-md p-6">
+      <h3 class="text-xl font-semibold text-orange-700 mb-4">Achievements</h3>
+      <ul class="space-y-2">
+        {% for a in results.achievements %}
+          <li class="text-sm">{{ a.title }} — {{ a.content|truncatewords:15 }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+
+    {% if results.jobs %}
+    <div class="bg-[var(--parchment)] border border-[var(--gold-light)] rounded-xl shadow-md p-6">
+      <h3 class="text-xl font-semibold text-yellow-700 mb-4">Job Postings</h3>
+      <ul class="space-y-2">
+        {% for j in results.jobs %}
+          <li class="text-sm">{{ j.title }} — {{ j.company }} — {{ j.description|truncatewords:10 }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+
+    {% if results.testimonials %}
+    <div class="bg-[var(--parchment)] border border-[var(--gold-light)] rounded-xl shadow-md p-6">
+      <h3 class="text-xl font-semibold text-red-700 mb-4">Testimonials</h3>
+      <ul class="space-y-2">
+        {% for t in results.testimonials %}
+          <li class="text-sm">{{ t.content|truncatewords:15 }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+
+    {% if results.gallery %}
+    <div class="bg-[var(--parchment)] border border-[var(--gold-light)] rounded-xl shadow-md p-6">
+      <h3 class="text-xl font-semibold text-teal-700 mb-4">Gallery</h3>
+      <ul class="space-y-2">
+        {% for g in results.gallery %}
+          <li class="text-sm">{{ g.title }} — {{ g.description|truncatewords:10 }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+
+    {% if results.drafts %}
+    <div class="bg-[var(--parchment)] border border-[var(--gold-light)] rounded-xl shadow-md p-6">
+      <h3 class="text-xl font-semibold text-gray-700 mb-4">Student Drafts</h3>
+      <ul class="space-y-2">
+        {% for d in results.drafts %}
+          <li class="text-sm">{{ d.project_title }} — {{ d.project_desc|truncatewords:10 }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+
+    {% if not results.alumni and not results.students and not results.events and not results.achievements and not results.jobs and not results.testimonials and not results.gallery and not results.drafts %}
+    <div class="text-center text-gray-500">
+      <p>No results found for "<strong>{{ query }}</strong>".</p>
+    </div>
+    {% endif %}
+
+  </div>
+</div>
+{% endblock %}

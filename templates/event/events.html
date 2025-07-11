@@ -1,0 +1,216 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Upcoming Events - AlumniVerse{% endblock %}
+
+{% block extra_head %}
+<style>
+  .events-container {
+    background: url('/static/images/parchment-texture-light.jpg') no-repeat center center;
+    background-size: cover;
+    min-height: 100vh;
+    padding: 5rem 1rem;
+  }
+  
+  .event-card {
+    background: rgba(253, 251, 245, 0.92);
+    border: 2px solid var(--gold-light);
+    box-shadow: 0 4px 20px rgba(156, 124, 56, 0.15);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    overflow: hidden;
+    position: relative;
+  }
+  
+  .event-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 30px rgba(156, 124, 56, 0.25);
+  }
+  
+  .event-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    background: linear-gradient(90deg, var(--gold-light), var(--gold-dark), var(--gold-light));
+  }
+  
+  .event-image {
+    height: 250px;
+    overflow: hidden;
+    position: relative;
+  }
+  
+  .event-image img {
+    transition: transform 0.6s ease;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: sepia(0.1) brightness(1.05);
+  }
+  
+  .event-card:hover .event-image img {
+    transform: scale(1.08);
+  }
+  
+  .event-date {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: rgba(253, 251, 245, 0.9);
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    font-family: 'Cinzel', serif;
+    font-weight: 600;
+    color: var(--gold-dark);
+    border: 1px solid var(--gold-light);
+  }
+  
+  .register-btn {
+    background: linear-gradient(to right, var(--gold-light), var(--gold-dark));
+    color: var(--primary-dark);
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(156, 124, 56, 0.3);
+    font-weight: 600;
+  }
+  
+  .register-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(156, 124, 56, 0.4);
+    letter-spacing: 1px;
+  }
+  
+  .header-underline {
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--gold-light), transparent);
+    width: 150px;
+    margin: 1.5rem auto;
+    animation: underlineExpand 1s ease-out forwards;
+  }
+  
+  @keyframes underlineExpand {
+    0% { transform: scaleX(0); }
+    100% { transform: scaleX(1); }
+  }
+  
+  .icon-gold {
+    color: var(--gold-dark);
+  }
+  
+  .no-events-icon {
+    color: var(--gold-light);
+    opacity: 0.7;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero -->
+<section class="hero bg-cover bg-center h-[90vh] text-white flex items-center justify-center" 
+         style="background-image: url('{% static 'images/event.png' %}'); 
+                background-color: rgba(26, 18, 11, 0.7); 
+                background-blend-mode: overlay;">
+  <div class="relative">
+    <div class="bg-black bg-opacity-40 backdrop-blur-sm p-12 rounded-xl text-center transition-all duration-500 hover:bg-opacity-50 hover:backdrop-blur-md"
+         style="border-color: var(--gold-light);">
+      <h1 class="text-5xl font-bold mb-6 font-cinzel tracking-wide">
+        <span style="background: linear-gradient(to right, var(--gold-dark), var(--gold-dark)); -webkit-background-clip: text; background-clip: text; color: transparent;">
+          Upcoming Events
+        </span>
+      </h1>
+      <p class="text-xl mb-8 font-serif italic" style="color: var(--gold-light);">
+        >Join us for inspiring gatherings and networking opportunities
+      </p>
+      
+      <div class="relative group">
+        <div class="absolute -inset-1 rounded-lg blur opacity-25 group-hover:opacity-50 transition duration-500" 
+             style="background: linear-gradient(to right, var(--gold-light), var(--gold-dark));"></div>
+        <a href="{% url 'register' %}"
+           class="relative px-10 py-4 rounded-lg font-medium text-lg transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
+           style="background-color: var(--primary-dark); color: white; border-color: var(--gold-light); border-opacity: 0.3; border-width: 1px;">
+          Join us
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+<div class="events-container">
+  <div class="max-w-6xl mx-auto">
+    <!-- Page Header with Seal -->
+    <div class="text-center mb-16 relative">
+      <div class="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-8 w-16 h-16 bg-center bg-no-repeat bg-contain" 
+           style="background-image: url('/static/images/seal-gold.png');"></div>
+      <h1 class="text-3xl md:text-4xl font-bold text-gray-900 font-cinzel mb-4 pt-8">Discover Events</h1>
+      <div class="header-underline"></div>
+      <p class="text-lg text-gray-600 max-w-2xl mx-auto">Join your fellow alumni for these distinguished events</p>
+    </div>
+    
+    <!-- Events Grid -->
+    {% if events %}
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 px-4">
+      {% for event in events %}
+      <div class="event-card rounded-lg">
+        <!-- Event Image -->
+        <div class="event-image">
+          {% if event.image %}
+          <img src="/media/{{ event.image }}" alt="{{ event.title }}">
+          {% else %}
+          <div class="h-full w-full bg-gradient-to-br from-amber-50 to-amber-100 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-20 w-20 no-events-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+            </svg>
+          </div>
+          {% endif %}
+          <div class="event-date">
+            {{ event.date|date:"M d, Y" }}
+          </div>
+        </div>
+        
+        <!-- Event Details -->
+        <div class="p-6">
+          <h3 class="text-2xl font-semibold text-gray-900 mb-3 font-cinzel">{{ event.title }}</h3>
+          
+          <div class="flex items-center text-gray-700 mb-3">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 icon-gold" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+            </svg>
+            <span>{{ event.location }}</span>
+          </div>
+          
+          <p class="text-gray-600 mb-6">{{ event.description|truncatewords:25 }}</p>
+          
+          <div class="flex justify-between items-center">
+
+            <a href="{% url 'register_for_event' %}?event_id={{ event.event_id }}" 
+               class="register-btn px-6 py-2 rounded-lg">
+              Register
+            </a>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <!-- No Events State -->
+    <div class="text-center py-16 bg-white bg-opacity-80 rounded-xl max-w-2xl mx-auto p-8 border border-gold-100">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-20 w-20 mx-auto no-events-icon mb-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/>
+      </svg>
+      <h3 class="text-2xl font-medium text-gray-900 mb-3 font-cinzel">No Upcoming Events</h3>
+      <p class="text-gray-600 max-w-md mx-auto">We're preparing our next gathering of minds. Check back soon for announcements.</p>
+      <div class="mt-6">
+        <a href="{% url 'contact' %}" class="inline-flex items-center text-gold-600 hover:text-gold-800 font-medium">
+          Suggest an event
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

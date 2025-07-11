@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block content %}
+
+
+<h2 class="text-2xl font-semibold">Sent Messages</h2>
+<ul>
+  {% for msg in messages %}
+    <li class="mb-3 p-3 border">
+      <p>You → <strong>{{ msg.receiver_name }}</strong></p>
+      <p>{{ msg.timestamp|date:"F j, Y, g:i a" }}</p>
+      <p>{{ msg.content }}</p>
+      <a href="{% url 'conversation' msg.receiver_id %}" class="text-blue-600">View Thread</a>
+    </li>
+  {% endfor %}
+</ul>
+
+{% endblock %}

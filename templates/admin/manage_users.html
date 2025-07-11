@@ -1,0 +1,251 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}User Management - AlumniVerse{% endblock %}
+
+{% block extra_head %}
+<style>
+  .user-management-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1.5rem;
+  }
+
+  .management-header {
+    background: linear-gradient(135deg, rgba(253, 251, 245, 0.98) 0%, rgba(250, 245, 230, 0.98) 100%);
+    border: 1px solid var(--gold-light);
+    box-shadow: 0 4px 20px rgba(156, 124, 56, 0.12);
+    border-radius: 0.75rem;
+    padding: 1.5rem 2rem;
+    margin-bottom: 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .management-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, var(--gold-light), var(--gold-dark), var(--gold-light));
+  }
+
+  .management-title {
+    font-family: 'Cinzel', serif;
+    font-weight: 700;
+    color: var(--primary-dark);
+    font-size: 1.75rem;
+    letter-spacing: 0.5px;
+  }
+
+  .search-form {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .search-input {
+    flex: 1;
+    max-width: 400px;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--gold-light);
+    border-radius: 0.375rem;
+    background-color: rgba(255, 255, 255, 0.8);
+    transition: all 0.3s ease;
+  }
+
+  .search-input:focus {
+    outline: none;
+    border-color: var(--gold-dark);
+    box-shadow: 0 0 0 3px rgba(156, 124, 56, 0.2);
+  }
+
+  .search-btn {
+    background: linear-gradient(to right, var(--gold-light), var(--gold-dark));
+    color: var(--primary-dark);
+    font-weight: 600;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .search-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(156, 124, 56, 0.3);
+  }
+
+  .user-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: linear-gradient(135deg, rgba(253, 251, 245, 0.95) 0%, rgba(250, 245, 230, 0.95) 100%);
+    border: 1px solid var(--gold-light);
+    box-shadow: 0 4px 12px rgba(156, 124, 56, 0.08);
+    border-radius: 0.75rem;
+    overflow: hidden;
+  }
+
+  .user-table thead {
+    background: linear-gradient(135deg, rgba(156, 124, 56, 0.1) 0%, rgba(156, 124, 56, 0.05) 100%);
+  }
+
+  .user-table th {
+    padding: 1rem;
+    text-align: left;
+    font-weight: 600;
+    color: var(--primary-dark);
+    border-bottom: 2px solid var(--gold-light);
+  }
+
+  .user-table td {
+    padding: 1rem;
+    border-bottom: 1px solid rgba(156, 124, 56, 0.1);
+  }
+
+  .user-table tr:last-child td {
+    border-bottom: none;
+  }
+
+  .user-table tr:hover {
+    background-color: rgba(253, 251, 245, 0.7);
+  }
+
+  .status-active {
+    color: #10b981;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .status-active::before {
+    content: '';
+    display: inline-block;
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background-color: #10b981;
+    margin-right: 0.5rem;
+  }
+
+  .status-inactive {
+    color: #ef4444;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .status-inactive::before {
+    content: '';
+    display: inline-block;
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background-color: #ef4444;
+    margin-right: 0.5rem;
+  }
+
+  .action-link {
+    color: var(--gold-dark);
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    transition: color 0.2s ease;
+  }
+
+  .action-link:hover {
+    color: var(--gold-dark);
+    text-decoration: underline;
+  }
+
+  .action-link svg {
+    margin-right: 0.25rem;
+  }
+
+  .empty-state {
+    padding: 2rem;
+    text-align: center;
+    color: var(--text-secondary);
+    background: linear-gradient(135deg, rgba(253, 251, 245, 0.95) 0%, rgba(250, 245, 230, 0.95) 100%);
+    border-radius: 0.75rem;
+  }
+
+  .empty-icon {
+    width: 3rem;
+    height: 3rem;
+    margin: 0 auto 1rem;
+    color: var(--gold-light);
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="user-management-container">
+  <div class="management-header">
+    <h1 class="management-title">User Management</h1>
+  </div>
+
+  <form method="get" class="search-form">
+    <input type="text" name="search" value="{{ search_query }}" placeholder="Search by username or email" 
+           class="search-input">
+    <button type="submit" class="search-btn">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
+      </svg>
+      Search
+    </button>
+  </form>
+
+  {% if users %}
+    <table class="user-table">
+      <thead>
+        <tr>
+          <th>Username</th>
+          <th>Email</th>
+          <th>Role</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for user in users %}
+          <tr>
+            <td>{{ user.username }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.role }}</td>
+            <td>
+              {% if user.is_active %}
+                <span class="status-active">Active</span>
+              {% else %}
+                <span class="status-inactive">Inactive</span>
+              {% endif %}
+            </td>
+            <td>
+              <a href="{% url 'toggle_user_status' user.user_id %}" class="action-link">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  {% if user.is_active %}
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 7a4 4 0 11-8 0 4 4 0 018 0zM9 14a6 6 0 00-6 6v1h12v-1a6 6 0 00-6-6zM21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  {% else %}
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zM12 8v4m0 4h.01" />
+                  {% endif %}
+                </svg>
+                {% if user.is_active %}Deactivate{% else %}Activate{% endif %}
+              </a>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <div class="empty-state">
+      <svg class="empty-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+      </svg>
+      <p>No users found matching your search criteria.</p>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

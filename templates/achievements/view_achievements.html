@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<section class="py-12 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
+  <!-- Header with elegant styling -->
+  <div class="text-center mb-16">
+    <h1 class="text-4xl md:text-5xl font-cinzel font-bold mb-6 text-gray-900">Alumni Achievements</h1>
+    <div class="w-24 h-1 mx-auto mb-6 bg-gradient-to-r from-amber-400 to-amber-600 animate-underline"></div>
+    <p class="text-lg text-gray-600 max-w-2xl mx-auto">Celebrating the remarkable accomplishments of our graduates</p>
+  </div>
+
+  <!-- Achievements Grid -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+    {% for ach in achievements %}
+    <div class="relative overflow-hidden rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 group bg-white">
+      <!-- Achievement Content -->
+      <div class="p-6">
+        <div class="flex items-center mb-4">
+          <div class="flex-shrink-0 h-12 w-12 rounded-full bg-amber-100 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <div class="ml-4">
+            <h2 class="text-xl font-semibold text-gray-900">{{ ach.title }}</h2>
+            <p class="text-sm text-gray-500">{{ ach.date_posted }}</p>
+          </div>
+        </div>
+        
+        <div class="mb-4">
+          <p class="text-gray-700 mb-3"><span class="font-medium" style="color: var(--gold-dark);">By:</span> {{ ach.poster_name }}</p>
+          <p class="text-gray-600">{{ ach.content|truncatewords:25 }}</p>
+        </div>
+        
+        <a href="{% url 'achievement_details' ach.achievement_id %}" 
+           class="inline-flex items-center text-sm font-medium transition-colors duration-200"
+           style="color: var(--gold-dark);">
+          Read full story
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+    {% empty %}
+    <div class="col-span-full text-center py-12">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+      </svg>
+      <h3 class="text-lg font-medium text-gray-900 mb-2">No achievements yet</h3>
+      <p class="text-gray-500 max-w-md mx-auto">Check back later to see accomplishments from our alumni</p>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+<style>
+  /* Animations */
+  @keyframes underline {
+    0% { transform: scaleX(0); opacity: 0; }
+    100% { transform: scaleX(1); opacity: 1; }
+  }
+  
+  .animate-underline {
+    animation: underline 0.8s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+  }
+  
+  /* Hover effects */
+  .group:hover {
+    transform: translateY(-5px);
+  }
+  
+  /* Smooth transitions */
+  .transition-all {
+    transition-property: all;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 300ms;
+  }
+</style>
+
+{% endblock %}

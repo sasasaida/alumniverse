@@ -1,0 +1,224 @@
+{% extends 'base.html' %}
+{% block title %}Recommendations{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+{% endblock %}
+
+{% block content %}
+<section class="py-16 bg-[var(--cream)]">
+  <div class="container mx-auto px-4 space-y-20">
+
+    <!-- Alumni Section -->
+    {% if recommended_alumni %}
+    <div>
+      <h2 class="text-3xl md:text-4xl font-cinzel font-bold mb-8 text-center text-[var(--primary-dark)]">Recommended Alumni</h2>
+      <div class="swiper alumni-swiper">
+        <div class="swiper-wrapper">
+          {% for alumni in recommended_alumni %}
+          <div class="swiper-slide">
+            <div class="bg-white rounded-xl shadow-md hover:shadow-lg transition w-full max-w-sm mx-auto overflow-hidden">
+              <img src="/media/{{ alumni.picture }}" class="w-full h-44 object-cover" alt="{{ alumni.full_name }}">
+              <div class="p-5">
+                <h3 class="text-lg font-semibold text-[var(--primary-dark)]">{{ alumni.full_name }}</h3>
+                <p class="text-sm text-gray-600">{{ alumni.job_title }} at {{ alumni.company }}</p>
+                <p class="text-sm text-green-600">Mentorships: {{ alumni.mentorship_count }}</p>
+                {% if alumni.alumni_id %}
+                <a href="{% url 'public_profile_detail' profile_id=alumni.alumni_id %}" class="text-blue-600 text-sm mt-1 inline-block hover:underline">View Profile &rarr;</a>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        <div class="swiper-pagination alumni-pagination mt-3"></div>
+        <div class="swiper-button-next alumni-next"></div>
+        <div class="swiper-button-prev alumni-prev"></div>
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Events Section -->
+    {% if recommended_events %}
+    <div>
+      <h2 class="text-3xl md:text-4xl font-cinzel font-bold mb-8 text-center text-[var(--primary-dark)]">Recommended Events</h2>
+      <div class="swiper event-swiper">
+        <div class="swiper-wrapper">
+          {% for event in recommended_events %}
+          <div class="swiper-slide">
+            <div class="bg-white rounded-xl shadow-md hover:shadow-lg transition w-full max-w-sm mx-auto">
+              <div class="p-5">
+                <h3 class="text-lg font-semibold text-[var(--primary-dark)]">{{ event.title }}</h3>
+                <p class="text-sm text-gray-600"><strong>Date:</strong> {{ event.date }}</p>
+                <p class="text-sm text-gray-500 my-2">{{ event.description|truncatewords:20 }}</p>
+                <!--<p class="text-sm mt-2 text-green-600">
+                  ✅ {{ event.total_registrations }} total registrations, {{ event.same_dept_registrations }} from your department
+                </p>-->
+                <!-- Percentage Display -->
+                <p class="text-sm text-green-600 mb-1">
+                  ✅ {{ event.same_dept_registrations }}/{{ event.total_registrations }} from your department
+                  ({{ event.match_percentage }}%)
+                </p>
+
+                <!-- Progress Bar -->
+                <!--<div class="w-full bg-gray-200 rounded-full h-2.5 mb-3">
+                  <div class="bg-green-500 h-2.5 rounded-full" style="width: {{ event.match_percentage }}%;"></div>
+                </div>-->
+
+                <div class="w-full bg-gray-200 rounded-full h-2.5 mb-3">
+                  <div class="h-2.5 rounded-full
+                    {% if event.match_percentage >= 60 %}
+                      bg-green-500
+                    {% elif event.match_percentage >= 30 %}
+                      bg-yellow-400
+                    {% else %}
+                      bg-red-400
+                    {% endif %}"
+                    style="width: {{ event.match_percentage }}%;"></div>
+                </div>
+
+
+                <a href="{% url 'register_for_event' %}?event_id={{ event.event_id }}" class="text-[var(--gold-dark)] text-sm font-medium hover:underline">Register &rarr;</a>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        <div class="swiper-pagination event-pagination mt-3"></div>
+        <div class="swiper-button-next event-next"></div>
+        <div class="swiper-button-prev event-prev"></div>
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Jobs Section -->
+    {% if recommended_jobs %}
+    <div>
+      <h2 class="text-3xl md:text-4xl font-cinzel font-bold mb-8 text-center text-[var(--primary-dark)]">Recommended Jobs</h2>
+      <div class="swiper job-swiper">
+        <div class="swiper-wrapper">
+          {% for job in recommended_jobs %}
+          <div class="swiper-slide">
+            <div class="bg-white rounded-xl shadow-md hover:shadow-lg transition w-full max-w-sm mx-auto">
+              <div class="p-5">
+                <h3 class="text-lg font-semibold text-[var(--primary-dark)]">{{ job.title }}</h3>
+                <p class="text-sm text-gray-600"><strong>Company:</strong> {{ job.company }}</p>
+                <p class="text-sm text-gray-600"><strong>Deadline:</strong> {{ job.deadline }}</p>
+                <p class="text-sm text-gray-500 mt-2">{{ job.description|truncatewords:20 }}</p>
+                <a href="{% url 'job_details' job.job_id %}" class="text-[var(--gold-dark)] text-sm font-medium hover:underline">View details &rarr;</a>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        <div class="swiper-pagination job-pagination mt-3"></div>
+        <div class="swiper-button-next job-next"></div>
+        <div class="swiper-button-prev job-prev"></div>
+      </div>
+    </div>
+    {% endif %}
+
+  </div>
+</section>
+
+<!-- Based on Interests Section -->
+<section class="py-20 bg-gray-100 px-4">
+  <div class="container mx-auto">
+    <h2 class="text-3xl md:text-4xl font-bold text-center mb-12 text-gray-800">🔎 Based on Your Interests</h2>
+
+    <!-- Alumni -->
+    {% if interest_based_recommended_alumni %}
+    <div class="mb-12">
+      <h3 class="text-2xl font-semibold mb-6 text-gray-700">👥 Alumni</h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for alumni in interest_based_recommended_alumni %}
+        <div class="bg-white shadow rounded-xl p-5 hover:shadow-lg transition">
+          <div class="flex items-center space-x-4">
+            <img src="/media/{{ alumni.picture }}" alt="{{ alumni.full_name }}" class="w-16 h-16 rounded-full object-cover">
+            <div>
+              <h4 class="text-lg font-bold">{{ alumni.full_name }}</h4>
+              <p class="text-sm text-gray-500">{{ alumni.job_title }} @ {{ alumni.company }}</p>
+              <p class="text-sm text-blue-600">{{ alumni.department }}</p>
+            </div>
+          </div>
+          <a href="{% url 'public_profile_detail' profile_id=alumni.alumni_id %}" class="text-blue-600 text-sm mt-2 inline-block hover:underline">View Profile &rarr;</a>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Events -->
+    <h3 class="text-2xl font-semibold mb-6 text-gray-700">📅 Events</h3>
+    {% if interest_based_events %}
+      <div class="mb-12">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {% for event in interest_based_events %}
+            <div class="bg-white shadow rounded-xl p-5 border border-gray-200">
+              <h4 class="text-lg font-bold">{{ event.title }}</h4>
+              <p class="text-sm text-gray-600 mt-1">{{ event.description|truncatechars:100 }}</p>
+              <p class="text-sm mt-2 text-gray-500">📍 {{ event.location }} | 🗓️ {{ event.date }}</p>
+              <a href="{% url 'register_for_event' %}?event_id={{ event.event_id }}" class="text-[var(--gold-dark)] text-sm font-medium hover:underline">Register &rarr;</a>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    {% else %}
+      <p class="text-sm text-gray-600 text-center mt-5">
+        No Events Found
+      </p>
+    {% endif %}
+
+
+    <!-- Jobs -->
+    {% if interest_based_jobs %}
+    <div>
+      <h3 class="text-2xl font-semibold mb-6 text-gray-700">💼 Jobs</h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for job in interest_based_jobs %}
+        <div class="bg-white shadow rounded-xl p-5 border border-gray-200">
+          <h4 class="text-lg font-bold">{{ job.title }}</h4>
+          <p class="text-sm text-gray-600">{{ job.company }}</p>
+          <p class="text-sm text-gray-500 mt-1">📝 {{ job.description|truncatechars:100 }}</p>
+          <p class="text-sm mt-2 text-red-500">Deadline: {{ job.deadline }}</p>
+          <a href="{% url 'job_details' job.job_id %}" class="text-[var(--gold-dark)] text-sm font-medium hover:underline">View details &rarr;</a>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script>
+  const swiperOptions = (paginationClass, nextClass, prevClass) => ({
+    slidesPerView: 1,
+    spaceBetween: 16,
+    loop: true,
+    autoplay: {
+      delay: 4000,
+      disableOnInteraction: false,
+    },
+    pagination: {
+      el: paginationClass,
+      clickable: true
+    },
+    navigation: {
+      nextEl: nextClass,
+      prevEl: prevClass,
+    },
+    breakpoints: {
+      640: { slidesPerView: 1.2 },
+      768: { slidesPerView: 2 },
+      1024: { slidesPerView: 3 }
+    }
+  });
+
+  new Swiper('.alumni-swiper', swiperOptions('.alumni-pagination', '.alumni-next', '.alumni-prev'));
+  new Swiper('.event-swiper', swiperOptions('.event-pagination', '.event-next', '.event-prev'));
+  new Swiper('.job-swiper', swiperOptions('.job-pagination', '.job-next', '.job-prev'));
+</script>
+{% endblock %}

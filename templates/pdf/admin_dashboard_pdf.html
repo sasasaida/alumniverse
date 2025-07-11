@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        h1 { text-align: center; font-size: 24px; margin-bottom: 20px; }
+        .section { margin-bottom: 30px; }
+        .section h2 { font-size: 18px; margin-bottom: 10px; }
+        .card { padding: 10px; margin: 5px 0; border: 1px solid #ddd; border-radius: 8px; }
+        table { width: 100%; margin-top: 15px; border-collapse: collapse; }
+        table, th, td { border: 1px solid #ddd; }
+        th, td { padding: 8px; text-align: left; }
+        .footer { text-align: center; margin-top: 30px; }
+    </style>
+</head>
+<body>
+    <h1>Admin Analytics Dashboard</h1>
+
+    <div class="section">
+        <h2>Total Registered Users</h2>
+        <div class="card">
+            <p>{{ total_users }}</p>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Total Students</h2>
+        <div class="card">
+            <p>{{ total_students }}</p>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Total Alumni</h2>
+        <div class="card">
+            <p>{{ total_alumni }}</p>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Event Participation</h2>
+        <div class="card">
+            <p>{{ event_participation }}</p>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Total Job Postings</h2>
+        <div class="card">
+            <p>{{ total_jobs }}</p>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Active Mentorships</h2>
+        <div class="card">
+            <p>{{ active_mentorships }}</p>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Recent Activities</h2>
+        <div class="card">
+            <ul>
+                {% for activity in recent_activities %}
+                    <li><strong>{{ activity.action }}</strong> by {{ activity.user }} on {{ activity.timestamp }}</li>
+                {% empty %}
+                    <p>No recent activities</p>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>Generated on {{ today|date:"F d, Y" }}</p>
+    </div>
+</body>
+</html>

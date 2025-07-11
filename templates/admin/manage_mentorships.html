@@ -1,0 +1,239 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Guide Mentorships - AlumniVerse{% endblock %}
+
+{% block extra_head %}
+<style>
+  .mentorships-container {
+    max-width: 1000px;
+    margin: 2rem auto;
+    padding: 0 1.5rem;
+  }
+
+  .mentorships-header {
+    background: linear-gradient(135deg, rgba(253, 251, 245, 0.98) 0%, rgba(250, 245, 230, 0.98) 100%);
+    border: 1px solid var(--gold-light);
+    box-shadow: 0 4px 20px rgba(156, 124, 56, 0.12);
+    border-radius: 0.75rem;
+    padding: 1.5rem 2rem;
+    margin-bottom: 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .mentorships-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, var(--gold-light), var(--gold-dark), var(--gold-light));
+  }
+
+  .mentorships-title {
+    font-family: 'Cinzel', serif;
+    font-weight: 700;
+    color: var(--primary-dark);
+    font-size: 1.75rem;
+    letter-spacing: 0.5px;
+  }
+
+  .mentorship-list {
+    background: linear-gradient(135deg, rgba(253, 251, 245, 0.95) 0%, rgba(250, 245, 230, 0.95) 100%);
+    border: 1px solid var(--gold-light);
+    box-shadow: 0 4px 12px rgba(156, 124, 56, 0.08);
+    border-radius: 0.75rem;
+    overflow: hidden;
+  }
+
+  .mentorship-item {
+    padding: 1.5rem;
+    border-bottom: 1px solid rgba(156, 124, 56, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .mentorship-item:last-child {
+    border-bottom: none;
+  }
+
+  .mentorship-details {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .mentorship-pair {
+    flex: 1;
+    min-width: 300px;
+  }
+
+  .mentorship-label {
+    font-weight: 600;
+    color: var(--gold-dark);
+    margin-right: 0.5rem;
+  }
+
+  .mentorship-name {
+    font-weight: 500;
+    color: var(--primary-dark);
+  }
+
+  .mentorship-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    align-items: center;
+  }
+
+  .status-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 1rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .status-pending {
+    background-color: rgba(251, 191, 36, 0.1);
+    color: #d97706;
+  }
+
+  .status-active {
+    background-color: rgba(16, 185, 129, 0.1);
+    color: #059669;
+  }
+
+  .status-rejected {
+    background-color: rgba(239, 68, 68, 0.1);
+    color: #dc2626;
+  }
+
+  .status-completed {
+    background-color: rgba(99, 102, 241, 0.1);
+    color: #4f46e5;
+  }
+
+  .mentorship-date {
+    color: var(--gold-dark);
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+  }
+
+  .mentorship-date svg {
+    margin-right: 0.5rem;
+  }
+
+  .mentorship-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: center;
+    margin-top: 0.5rem;
+  }
+
+  .status-select {
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--gold-light);
+    border-radius: 0.375rem;
+    background-color: white;
+    min-width: 150px;
+  }
+
+  .update-btn {
+    background: linear-gradient(to right, var(--gold-light), var(--gold-dark));
+    color: var(--primary-dark);
+    font-weight: 600;
+    padding: 0.5rem 1.25rem;
+    border: none;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .update-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(156, 124, 56, 0.3);
+  }
+
+  .empty-state {
+    padding: 3rem 2rem;
+    text-align: center;
+    background: linear-gradient(135deg, rgba(253, 251, 245, 0.95) 0%, rgba(250, 245, 230, 0.95) 100%);
+    border-radius: 0.75rem;
+  }
+
+  .empty-icon {
+    width: 3rem;
+    height: 3rem;
+    margin: 0 auto 1rem;
+    color: var(--gold-light);
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="mentorships-container">
+  <div class="mentorships-header">
+    <h1 class="mentorships-title">Guide Mentorships</h1>
+  </div>
+
+  {% if mentorships %}
+    <div class="mentorship-list">
+      {% for m in mentorships %}
+        <div class="mentorship-item">
+          <div class="mentorship-details">
+            <div class="mentorship-pair">
+              <span class="mentorship-label">Mentor:</span>
+              <span class="mentorship-name">{{ m.mentor_name }}</span>
+            </div>
+            <div class="mentorship-pair">
+              <span class="mentorship-label">Mentee:</span>
+              <span class="mentorship-name">{{ m.mentee_name }}</span>
+            </div>
+          </div>
+
+          <div class="mentorship-meta">
+            <span class="status-badge status-{{ m.status|lower }}">
+              {{ m.status }}
+            </span>
+            <span class="mentorship-date">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              Started {{ m.start_date|date:"F j, Y" }}
+            </span>
+          </div>
+
+          <form method="post" action="{% url 'update_mentorship_status' m.mentorship_id %}" class="mentorship-form">
+            {% csrf_token %}
+            <select name="status" class="status-select">
+              <option value="pending" {% if m.status == 'Pending' %}selected{% endif %}>Pending</option>
+              <option value="approved" {% if m.status == 'Active' %}selected{% endif %}>Active</option>
+              <option value="rejected" {% if m.status == 'Rejected' %}selected{% endif %}>Rejected</option>
+              <option value="completed" {% if m.status == 'Completed' %}selected{% endif %}>Completed</option>
+            </select>
+            <button type="submit" class="update-btn">
+              Update Status
+            </button>
+          </form>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="mentorship-list empty-state">
+      <svg class="empty-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+      </svg>
+      <h3 class="text-lg font-medium text-gray-900">No Active Mentorships</h3>
+      <p class="mt-2 text-gray-600">There are currently no mentorship relationships to manage.</p>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,235 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Admin Dashboard - AlumniVerse{% endblock %}
+
+{% block extra_head %}
+<style>
+  .admin-dashboard {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1.5rem;
+  }
+
+  .dashboard-header {
+    background: linear-gradient(135deg, rgba(253, 251, 245, 0.98) 0%, rgba(250, 245, 230, 0.98) 100%);
+    border: 1px solid var(--gold-light);
+    box-shadow: 0 4px 20px rgba(156, 124, 56, 0.12);
+    border-radius: 0.75rem;
+    padding: 1.75rem 2rem;
+    margin-bottom: 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .dashboard-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, var(--gold-light), var(--gold-dark), var(--gold-light));
+  }
+
+  .dashboard-title {
+    font-family: 'Cinzel', serif;
+    font-weight: 700;
+    color: var(--primary-dark);
+    font-size: 2rem;
+    letter-spacing: 0.5px;
+    position: relative;
+    padding-bottom: 0.5rem;
+    display: inline-block;
+  }
+
+  .dashboard-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 50%;
+    height: 2px;
+    background: linear-gradient(90deg, var(--gold-light), var(--gold-dark));
+    transition: width 0.3s ease;
+  }
+
+  .dashboard-title:hover::after {
+    width: 100%;
+  }
+
+  .dashboard-subtitle {
+    font-size: 0.9rem;
+    color: var(--gold-dark);
+    font-style: italic;
+    margin-top: 0.25rem;
+  }
+
+  .dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+
+  .dashboard-card {
+    background: linear-gradient(135deg, rgba(253, 251, 245, 0.95) 0%, rgba(250, 245, 230, 0.95) 100%);
+    border: 1px solid var(--gold-light);
+    box-shadow: 0 4px 12px rgba(156, 124, 56, 0.08);
+    border-radius: 0.75rem;
+    padding: 1.75rem;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    border-top: 4px solid var(--gold-dark);
+  }
+
+  .dashboard-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 24px rgba(156, 124, 56, 0.15);
+  }
+
+  .card-icon {
+    width: 2.5rem;
+    height: 2.5rem;
+    margin-bottom: 1rem;
+    color: var(--gold-dark);
+  }
+
+  .card-title {
+    font-weight: 600;
+    color: var(--primary-dark);
+    margin-bottom: 0.5rem;
+    font-size: 1.25rem;
+  }
+
+  .card-description {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+
+  /* Card category colors */
+  .user-management {
+    border-top-color: #3b82f6; /* blue-500 */
+  }
+  .content-management {
+    border-top-color: #10b981; /* emerald-500 */
+  }
+  .communication {
+    border-top-color: #ec4899; /* pink-500 */
+  }
+  .mentorship {
+    border-top-color: #f59e0b; /* amber-500 */
+  }
+  .moderation {
+    border-top-color: #ef4444; /* red-500 */
+  }
+  .analytics {
+    border-top-color: #8b5cf6; /* violet-500 */
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="admin-dashboard">
+  <!-- Header -->
+  <div class="dashboard-header">
+    <h1 class="dashboard-title">Admin Dashboard</h1>
+    <p class="dashboard-subtitle">AlumniVerse Administration Portal</p>
+  </div>
+
+  <!-- Dashboard Cards -->
+  <div class="dashboard-grid">
+    <!-- User Management -->
+    <a href="{% url 'manage_users' %}" class="dashboard-card user-management">
+      <svg class="card-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
+      </svg>
+      <h3 class="card-title">Manage Users</h3>
+      <p class="card-description">View, edit, and manage all user accounts and permissions</p>
+    </a>
+
+    <!-- Notifications -->
+    <a href="{% url 'manage_notifications' %}" class="dashboard-card communication">
+      <svg class="card-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+      </svg>
+      <h3 class="card-title">Manage Notifications</h3>
+      <p class="card-description">Create and manage system-wide notifications</p>
+    </a>
+
+    <!-- Events -->
+    <a href="{% url 'manage_events' %}" class="dashboard-card content-management">
+      <svg class="card-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+      </svg>
+      <h3 class="card-title">Manage Events</h3>
+      <p class="card-description">Organize and schedule alumni events</p>
+    </a>
+
+    <!-- Testimonials -->
+    <a href="{% url 'manage_testimonials' %}" class="dashboard-card content-management">
+      <svg class="card-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/>
+      </svg>
+      <h3 class="card-title">Manage Testimonials</h3>
+      <p class="card-description">Review and approve alumni testimonials</p>
+    </a>
+
+    <!-- Mentorships -->
+    <a href="{% url 'manage_mentorships' %}" class="dashboard-card mentorship">
+      <svg class="card-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+      </svg>
+      <h3 class="card-title">Guide Mentorships</h3>
+      <p class="card-description">Monitor and facilitate mentorship programs</p>
+    </a>
+
+    <!-- Message Moderation -->
+    <a href="{% url 'moderate_messages' %}" class="dashboard-card moderation">
+      <svg class="card-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+      </svg>
+      <h3 class="card-title">Moderate Messages</h3>
+      <p class="card-description">Review and moderate community messages</p>
+    </a>
+
+    <!-- Contact Messages -->
+    <a href="{% url 'admin_contact_messages' %}" class="dashboard-card communication">
+      <svg class="card-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+      </svg>
+      <h3 class="card-title">Contact Messages</h3>
+      <p class="card-description">View and respond to contact form submissions</p>
+    </a>
+
+    <!-- Pending Admins -->
+    <a href="{% url 'pending_admins' %}" class="dashboard-card user-management">
+      <svg class="card-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+      </svg>
+      <h3 class="card-title">Pending Admins</h3>
+      <p class="card-description">Review and approve admin requests</p>
+    </a>
+
+    <!-- Analytics -->
+    <a href="{% url 'admin_analytics' %}" class="dashboard-card analytics">
+      <svg class="card-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+      </svg>
+      <h3 class="card-title">Admin Analytics</h3>
+      <p class="card-description">View platform usage statistics and insights</p>
+    </a>
+
+    <!-- Community Roles -->
+    <a href="{% url 'add_community_role' %}" class="dashboard-card content-management">
+      <svg class="card-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+      </svg>
+      <h3 class="card-title">Add Community</h3>
+      <p class="card-description">Create and manage community groups</p>
+    </a>
+  </div>
+</div>
+{% endblock %}

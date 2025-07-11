@@ -1,0 +1,347 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Message Inbox - AlumniVerse{% endblock %}
+
+{% block extra_head %}
+<style>
+  /* Main Container */
+  .inbox-container {
+    max-width: 72rem;
+    margin: 2rem auto;
+    padding: 0 1.5rem;
+  }
+
+  /* Conversation List */
+  .conversation-list {
+    background: white;
+    border-radius: 0.75rem;
+    overflow: hidden;
+  }
+
+  /* Conversation Item - Matching Header Style */
+  .conversation-item {
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    background: linear-gradient(135deg, rgba(253, 251, 245, 0.95) 0%, rgba(250, 245, 230, 0.95) 100%);
+    border: 1px solid var(--gold-light);
+    box-shadow: 0 4px 12px rgba(156, 124, 56, 0.08);
+    border-radius: 0.75rem;
+    transition: all 0.25s ease;
+    position: relative;
+  }
+
+  .conversation-item-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .conversation-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(156, 124, 56, 0.12);
+  }
+
+  .unread-conversation {
+    background: linear-gradient(135deg, rgba(236, 253, 245, 0.95) 0%, rgba(230, 250, 240, 0.95) 100%);
+    border-left: 4px solid var(--gold-dark);
+  }
+
+  /* Sender Info - Without Avatar */
+  .sender-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.25rem;
+  }
+
+  .sender-name-container {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .sender-name {
+    font-weight: 600;
+    color: var(--primary-dark);
+    font-size: 1.1rem;
+    letter-spacing: 0.3px;
+  }
+
+  .unread .sender-name {
+    color: var(--gold-dark);
+    font-weight: 700;
+  }
+
+  /* Message Preview */
+  .message-preview {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    padding-left: 0.25rem;
+  }
+
+  .unread .message-preview {
+    color: var(--text-primary);
+    font-weight: 500;
+  }
+
+  /* Message Meta */
+  .message-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 0.5rem;
+    padding-top: 0.5rem;
+    border-top: 1px dashed rgba(156, 124, 56, 0.2);
+  }
+
+  .message-time {
+    font-size: 0.85rem;
+    color: var(--text-tertiary);
+    font-style: italic;
+  }
+
+  .unread .message-time {
+    color: var(--gold-dark);
+    font-weight: 500;
+  }
+
+  /* Status Indicator */
+  .status-indicator {
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.75rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 1rem;
+  }
+
+  .unread-indicator {
+    background: linear-gradient(to right, var(--gold-light), var(--gold-dark));
+    color: white;
+    font-weight: 600;
+    box-shadow: 0 2px 4px rgba(156, 124, 56, 0.2);
+  }
+
+  /* View Button */
+  .view-button {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    background: white;
+    color: var(--gold-dark);
+    border: 1px solid var(--gold-light);
+    border-radius: 0.375rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  }
+
+  .view-button:hover {
+    background: var(--gold-dark);
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(156, 124, 56, 0.15);
+  }
+
+  .view-button svg {
+    margin-left: 0.5rem;
+    width: 0.9rem;
+    height: 0.9rem;
+  }
+
+  /* Empty State */
+  .empty-state {
+    padding: 3rem 2rem;
+    text-align: center;
+    background: linear-gradient(135deg, rgba(253, 251, 245, 0.95) 0%, rgba(250, 245, 230, 0.95) 100%);
+    border: 1px solid var(--gold-light);
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 12px rgba(156, 124, 56, 0.08);
+  }
+
+  .empty-icon {
+    width: 3.5rem;
+    height: 3.5rem;
+    margin: 0 auto 1.5rem;
+    color: var(--gold-light);
+  }
+
+  .empty-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--primary-dark);
+    margin-bottom: 0.5rem;
+    font-family: 'Cinzel', serif;
+  }
+
+  .empty-description {
+    color: var(--text-secondary);
+    max-width: 28rem;
+    margin: 0 auto 1.5rem;
+    line-height: 1.6;
+  }
+
+  /* Header Styles (enhanced) */
+  .inbox-header-container {
+    background: linear-gradient(135deg, rgba(253, 251, 245, 0.98) 0%, rgba(250, 245, 230, 0.98) 100%);
+    border: 1px solid var(--gold-light);
+    box-shadow: 0 4px 20px rgba(156, 124, 56, 0.12);
+    border-radius: 0.75rem;
+    padding: 1.75rem 2rem;
+    margin-bottom: 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .inbox-header-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, var(--gold-light), var(--gold-dark), var(--gold-light));
+  }
+  
+  .inbox-header {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  
+  @media (min-width: 640px) {
+    .inbox-header {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+    }
+  }
+  
+  .inbox-title {
+    font-family: 'Cinzel', serif;
+    font-weight: 700;
+    color: var(--primary-dark);
+    font-size: 2rem;
+    letter-spacing: 0.5px;
+    position: relative;
+    padding-bottom: 0.5rem;
+    display: inline-block;
+  }
+  
+  .inbox-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 50%;
+    height: 2px;
+    background: linear-gradient(90deg, var(--gold-light), var(--gold-dark));
+    transition: width 0.3s ease;
+  }
+  
+  .inbox-title:hover::after {
+    width: 100%;
+  }
+  
+  .inbox-meta {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  
+  .unread-badge {
+    background: linear-gradient(to right, var(--gold-light), var(--gold-dark));
+    color: white;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    padding: 0.35rem 1.25rem;
+    border-radius: 1.5rem;
+    box-shadow: 0 2px 8px rgba(156, 124, 56, 0.2);
+    transition: all 0.3s ease;
+  }
+  
+  .unread-badge:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(156, 124, 56, 0.3);
+  }
+  
+  .inbox-subtitle {
+    font-size: 0.9rem;
+    color: var(--gold-dark);
+    font-style: italic;
+    margin-top: 0.25rem;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="inbox-container">
+  <!-- Enhanced Header -->
+  <div class="inbox-header-container">
+    <div class="inbox-header">
+      <div>
+        <h1 class="inbox-title">Message Inbox</h1>
+        <p class="inbox-subtitle">Connect with your networks</p>
+      </div>
+      
+      <div class="inbox-meta">
+        {% if unread_count %}
+          <span class="unread-badge">
+            {{ unread_count }} unread message{{ unread_count|pluralize }}
+          </span>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <div class="conversation-list">
+    {% if messages_ %}
+      <div class="conversation-item-container">
+        {% for message in messages_ %}
+          <a href="{% url 'conversation' message.sender_id %}" class="conversation-item {% if not message.is_read %}unread-conversation unread{% endif %}">
+            <div class="sender-info">
+              <div class="sender-name-container">
+                <span class="sender-name">{{ message.sender_name }}</span>
+                {% if not message.is_read %}
+                  <span class="status-indicator unread-indicator">New</span>
+                {% endif %}
+              </div>
+              <span class="message-time">{{ message.timestamp|date:"M j, g:i a" }}</span>
+            </div>
+            <p class="message-preview">
+              {{ message.content|truncatechars:120 }}
+            </p>
+            <div class="message-meta">
+              <span class="message-time">Received {{ message.timestamp|timesince }} ago</span>
+              <button class="view-button">
+                View conversation
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                </svg>
+              </button>
+            </div>
+          </a>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="empty-state">
+        <svg class="empty-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+        </svg>
+        <h3 class="empty-title">No Messages Yet</h3>
+        <p class="empty-description">
+          Your message inbox is currently empty. When you receive messages from fellow alumni,
+          they will appear here for you to review and respond.
+        </p>
+      </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

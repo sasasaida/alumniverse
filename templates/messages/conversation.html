@@ -1,0 +1,265 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Conversation - AlumniVerse{% endblock %}
+
+{% block extra_head %}
+<style>
+  .message-container {
+    background: url('/static/images/parchment-texture-light.jpg') no-repeat center center;
+    background-size: cover;
+    min-height: 100vh;
+    padding: 3rem 1rem;
+  }
+  
+  .message-thread {
+    background: rgba(253, 251, 245, 0.92);
+    border: 2px solid var(--gold-light);
+    box-shadow: 0 4px 15px rgba(156, 124, 56, 0.1);
+    border-radius: 0.5rem;
+    max-height: 60vh;
+    overflow-y: auto;
+  }
+  
+  .message-bubble {
+    max-width: 70%;
+    padding: 0.75rem 1.25rem;
+    border-radius: 1rem;
+    position: relative;
+    margin-bottom: 0.5rem;
+    transition: all 0.3s ease;
+  }
+  
+  .sent-message {
+    background: linear-gradient(to right, var(--gold-light), var(--gold-dark));
+    color: var(--primary-dark);
+    border-top-right-radius: 0;
+    margin-left: auto;
+  }
+  
+  .received-message {
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid var(--gold-light);
+    border-top-left-radius: 0;
+    margin-right: auto;
+  }
+  
+  .message-time {
+    font-size: 0.7rem;
+    opacity: 0.8;
+    margin-top: 0.3rem;
+  }
+  
+  .message-form {
+    background: rgba(253, 251, 245, 0.92);
+    border: 2px solid var(--gold-light);
+    box-shadow: 0 4px 15px rgba(156, 124, 56, 0.1);
+    border-radius: 0.5rem;
+  }
+  
+  .message-textarea {
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid var(--gold-light);
+    transition: all 0.3s ease;
+  }
+  
+  .message-textarea:focus {
+    border-color: var(--gold-dark);
+    box-shadow: 0 0 0 3px rgba(196, 162, 74, 0.2);
+  }
+  
+  .send-btn {
+    background: linear-gradient(to right, var(--gold-light), var(--gold-dark));
+    color: var(--primary-dark);
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(156, 124, 56, 0.3);
+    font-weight: 600;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .send-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(156, 124, 56, 0.4);
+  }
+  
+  .send-btn::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: all 0.5s ease;
+  }
+  
+  .send-btn:hover::after {
+    left: 100%;
+  }
+  
+  /* Enhanced Header Styles */
+  .conversation-header {
+    background: linear-gradient(135deg, rgba(253, 251, 245, 0.95) 0%, rgba(250, 245, 230, 0.95) 100%);
+    border: 1px solid var(--gold-light);
+    box-shadow: 0 4px 20px rgba(156, 124, 56, 0.15);
+    border-radius: 0.5rem;
+    padding: 1.5rem 2rem;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 2rem;
+  }
+  
+  .conversation-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(to right, var(--gold-light), var(--gold-dark));
+  }
+  
+  .conversation-title {
+    font-family: 'Cinzel', serif;
+    font-weight: 700;
+    color: var(--primary-dark);
+    letter-spacing: 0.5px;
+    position: relative;
+    display: inline-block;
+  }
+  
+  .conversation-title::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    width: 50%;
+    height: 2px;
+    background: var(--gold-dark);
+    transition: all 0.3s ease;
+  }
+  
+  .conversation-title:hover::after {
+    width: 100%;
+  }
+  
+  .back-link {
+    color: var(--gold-dark);
+    transition: all 0.3s ease;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+    background: rgba(253, 251, 245, 0.7);
+    border: 1px solid var(--gold-light);
+    display: inline-flex;
+    align-items: center;
+  }
+  
+  .back-link:hover {
+    color: var(--gold-darker);
+    background: rgba(253, 251, 245, 0.9);
+    box-shadow: 0 2px 8px rgba(156, 124, 56, 0.1);
+    transform: translateY(-1px);
+  }
+  
+  /* Highlight effect for the whole container */
+  .message-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 80% 20%, rgba(255, 240, 200, 0.3) 0%, transparent 30%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  
+  /* Enhanced message bubbles */
+  .message-bubble {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  }
+  
+  .sent-message {
+    box-shadow: 0 3px 10px rgba(156, 124, 56, 0.2);
+  }
+  
+  .received-message {
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="message-container relative">
+  <div class="max-w-3xl mx-auto relative z-10">
+    <!-- Enhanced Header -->
+    <div class="conversation-header flex flex-col sm:flex-row items-start sm:items-center justify-between">
+      <div class="mb-4 sm:mb-0">
+        <h1 class="conversation-title text-3xl">Conversation with {{ thread.0.sender_name }}</h1>
+        <p class="text-sm text-gray-600 mt-2">AlumniVerse Messaging</p>
+      </div>
+      <a href="{% url 'inbox' %}" class="back-link">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+        </svg>
+        Back to Inbox
+      </a>
+    </div>
+
+    <!-- Message Thread -->
+    <div class="message-thread p-6 mb-6">
+      {% for msg in thread %}
+        <div class="flex {% if msg.sender_id == request.user.id %}justify-end{% else %}justify-start{% endif %} mb-4">
+          <div class="message-bubble {% if msg.sender_id == request.user.id %}sent-message{% else %}received-message{% endif %}">
+            <div class="font-medium text-sm mb-1">
+              {% if msg.sender_id == request.user.id %}You{% else %}{{ msg.sender_name }}{% endif %}
+            </div>
+            <p class="{% if msg.sender_id == request.user.id %}text-primary-dark{% else %}text-gray-800{% endif %}">{{ msg.content }}</p>
+            <div class="message-time text-right">
+              {{ msg.timestamp|date:"M j, Y · g:i A" }}
+            </div>
+            {% if msg.sender_id != request.user.id %}
+            <div class="font-medium text-sm mb-1">
+        <form method="post" action="{% url 'report_message' msg.message_id %}">
+            {% csrf_token %}
+            <input type="hidden" name="other_id" value="{{ other_id }}">
+            <button type="submit" class="text-red-600 hover:underline">Report</button>
+        </form>
+            </div>
+      {% elif msg.is_reported %}
+        <p class="text-sm text-gray-500 italic">⛔ Reported</p>
+      {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+    <!-- Message Form -->
+    <form method="POST" action="{% url 'send_message' other_id %}" class="message-form p-6">
+      {% csrf_token %}
+      <div class="mb-4">
+        <textarea name="content" rows="3" 
+                  class="message-textarea w-full px-4 py-3 rounded-lg focus:outline-none placeholder-gray-500" 
+                  placeholder="Compose your message..." required></textarea>
+      </div>
+      <div class="flex justify-end">
+        <button type="submit" class="send-btn px-6 py-3 rounded-lg flex items-center">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" />
+          </svg>
+          Send Message
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  // Auto-scroll to bottom of message thread
+  const thread = document.querySelector('.message-thread');
+  thread.scrollTop = thread.scrollHeight;
+</script>
+{% endblock %}

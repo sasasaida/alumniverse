@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="mt-10 mb-16 px-4 md:px-8 lg:px-20">
+  <div class="max-w-3xl mx-auto bg-[var(--parchment)] border border-[var(--gold-light)] shadow-xl rounded-xl px-8 pt-8 pb-10">
+    <h2 class="text-3xl font-serif font-bold text-center text-[var(--primary-dark)] mb-8">Edit Your Draft</h2>
+
+    <form method="POST" class="space-y-6">
+      {% csrf_token %}
+
+      <!-- Project Title -->
+      <div>
+        <label for="project_title" class="block text-sm font-medium text-[var(--primary-dark)] mb-1">Project Title</label>
+        <input type="text" name="project_title" value="{{ draft.project_title }}" required
+               class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--gold-light)]">
+      </div>
+
+      <!-- Project Description -->
+      <div>
+        <label for="project_desc" class="block text-sm font-medium text-[var(--primary-dark)] mb-1">Project Description</label>
+        <textarea name="project_desc" rows="3" required
+                  class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--gold-light)]">{{ draft.project_desc }}</textarea>
+      </div>
+
+      <!-- Research Paper -->
+      <div>
+        <label for="research_paper" class="block text-sm font-medium text-[var(--primary-dark)] mb-1">Research Paper</label>
+        <textarea name="research_paper" rows="3"
+                  class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--gold-light)]">{{ draft.research_paper }}</textarea>
+      </div>
+
+      <!-- Thesis Summary -->
+      <div>
+        <label for="thesis_summary" class="block text-sm font-medium text-[var(--primary-dark)] mb-1">Thesis Summary</label>
+        <textarea name="thesis_summary" rows="3"
+                  class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--gold-light)]">{{ draft.thesis_summary }}</textarea>
+      </div>
+
+      <!-- Club Details -->
+      <div>
+        <label for="club_details" class="block text-sm font-medium text-[var(--primary-dark)] mb-1">Club Details</label>
+        <textarea name="club_details" rows="3"
+                  class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--gold-light)]">{{ draft.club_details }}</textarea>
+      </div>
+
+      <!-- Submit Button -->
+      <div class="flex justify-end">
+        <button type="submit"
+                class="px-6 py-3 rounded-xl font-semibold shadow-md transition duration-300 transform hover:-translate-y-1
+                       bg-[var(--gold-light)] text-[var(--primary-dark)] border border-[var(--gold-dark)] hover:bg-[var(--gold-dark)]">
+          Save Changes
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
